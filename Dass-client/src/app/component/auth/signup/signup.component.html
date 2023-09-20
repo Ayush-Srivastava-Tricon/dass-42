@@ -14,9 +14,6 @@
 
         <label for="password">Password</label>
         <input type="text" id="password" [(ngModel)]="signUpObj['password']" placeholder="Enter your Password">
-
-        <label for="username">Username</label>
-        <input type="text" id="username" [(ngModel)]="signUpObj['userName']" placeholder="Enter your Username">
         
         <div class="error" *ngIf="error">
                 {{error}}

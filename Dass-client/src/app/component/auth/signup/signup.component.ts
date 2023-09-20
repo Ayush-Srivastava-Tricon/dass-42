@@ -19,8 +19,7 @@ export class SignupComponent {
       'firstName':this.signUpObj['firstName'],
       'lastName':this.signUpObj['lastName'],
       'email':this.signUpObj['email'],
-      'password':this.signUpObj['password'],
-      'userName':this.signUpObj['userName']
+      'password':this.signUpObj['password']
     };
 
     this.auth.register(params,(res:any)=>{
