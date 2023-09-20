@@ -1,0 +1,21 @@
+<div class="outer-container">
+    <div class="container">
+        <div class="card">
+            <h2>Login Form</h2>
+      <div>
+          <label for="Email">Email</label>
+        <input type="text" id="Email" [(ngModel)]="loginObj['email']"  placeholder="Enter your username">
+  
+        <label for="password">Password</label>
+        <input type="password" id="password" [(ngModel)]="loginObj['password']" placeholder="Enter your password">
+        
+        <div class="error" *ngIf="error">
+                {{error}} !
+        </div>
+        
+        <button type="submit" (click)="login()">Login</button>
+        <a href="javascript:void(0);" [routerLink]="['/signup']">SignUp</a>
+    </div>
+    </div>
+  </div>
+</div>
