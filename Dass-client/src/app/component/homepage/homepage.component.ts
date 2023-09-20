@@ -12,14 +12,14 @@ export class HomepageComponent {
   constructor(){}
 
   ngOnInit(){
-      const localData :any = JSON.parse(<any>sessionStorage.getItem("userData"));
+      const localData :any = JSON.parse(<any>localStorage.getItem("userData"));
       if(localData){
         this.user = localData;
       }
   }
 
   logout(){
-    sessionStorage.clear();
+    localStorage.clear();
     location.reload();;
   }
 }

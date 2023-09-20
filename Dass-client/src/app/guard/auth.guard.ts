@@ -13,7 +13,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):boolean {
-    const isUserLogged :boolean = JSON.parse(<any>sessionStorage.getItem("isUserLogged"));
+    const isUserLogged :boolean = JSON.parse(<any>localStorage.getItem("isUserLogged"));
 
     if(isUserLogged){
       return true;

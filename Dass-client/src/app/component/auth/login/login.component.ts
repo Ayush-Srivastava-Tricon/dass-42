@@ -17,11 +17,11 @@ export class LoginComponent {
 
   login(){
     let param={
-      'email':this.loginObj['email'],
+      'username':this.loginObj['email'],
       'password':this.loginObj['password']
     };
       this.auth.login(param,(res:any)=>{
-        if(res.status == 200){
+        if(res.status){
           console.log(res);
           this.error = '';
           this.isLoggedIn=true;
@@ -34,7 +34,7 @@ export class LoginComponent {
   }
 
   setLocalData(userData:any){
-    sessionStorage.setItem("isUserLogged", JSON.stringify(this.isLoggedIn));
-    sessionStorage.setItem("userData",JSON.stringify(userData));
+    localStorage.setItem("isUserLogged", JSON.stringify(this.isLoggedIn));
+    localStorage.setItem("userData",JSON.stringify(userData));
   }
 }

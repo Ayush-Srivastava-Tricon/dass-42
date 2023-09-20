@@ -28,7 +28,7 @@ export class AuthService extends BaseService{
   };
 
    register(param:any,callback:any){
-    return this.http.post(environment.API_URL + '/signup', param, httpOptions).subscribe({
+    return this.http.post(environment.API_URL + '/register', param, httpOptions).subscribe({
       next: data => { callback((<any>data)); },
       error: error => {
         callback((<any>error));

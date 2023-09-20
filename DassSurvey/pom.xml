@@ -121,7 +121,7 @@
 				<configuration>
 					<webResources>
 						<resource>
-							<directory>${basedir}/../Dass-client/dist/survey-client-app</directory>
+							<directory>${basedir}/../Dass-client/dist/dass-client</directory>
 						</resource>
 					</webResources>
 				</configuration>
