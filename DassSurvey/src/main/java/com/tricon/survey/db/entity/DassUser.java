@@ -48,5 +48,8 @@ public class DassUser extends BaseAuditEntity implements Serializable{
 	
 	@Column(name = "active")
 	private int active;
+	
+	@Column(name = "first_time_user")
+	private boolean isFirstTimeUser;
 
 }
