@@ -57,9 +57,10 @@ public class AuthenticationRestController {
 			authenticate(authenticationRequest.getUsername(), authenticationRequest.getPassword());  
 			final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getUsername());
 			final String token = jwtTokenUtil.generateToken(userDetails);
+			JwtUser user = (JwtUser) userDetails;
 			// Return the token
 			return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "User Logged in Success",
-					new JwtAuthenticationCustomResponse(token, userDetails.getUsername(), userDetails.getAuthorities())));
+					new JwtAuthenticationCustomResponse(token, userDetails.getUsername(), userDetails.getAuthorities(),user.getFirstName())));
 
     }
     
