@@ -98,14 +98,14 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/fetch_dass_score")
-	public ResponseEntity<?> getDassScore() {
+	public ResponseEntity<?> fetchDassScore() {
 		DassInterpritingDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = authentication.getPrincipal();
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
 		JwtUser jwtUser = (JwtUser) userDetails;
 		try {
-			response = userService.fetchDassScore(jwtUser);
+			response = userService.calculateDassScore(jwtUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());

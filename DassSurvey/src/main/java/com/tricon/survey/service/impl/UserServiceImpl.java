@@ -1,5 +1,7 @@
 package com.tricon.survey.service.impl;
 
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -14,8 +16,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tricon.survey.customQuery.dto.DassResponseDto;
+import com.tricon.survey.customQuery.dto.DassScoreDto;
 import com.tricon.survey.db.entity.DassQuestion;
 import com.tricon.survey.db.entity.DassResponse;
+import com.tricon.survey.db.entity.DassScore;
 import com.tricon.survey.db.entity.DassUser;
 import com.tricon.survey.db.entity.DassUserRole;
 import com.tricon.survey.db.entity.DassUserRolePk;
@@ -27,6 +31,7 @@ import com.tricon.survey.enums.DassCategory;
 import com.tricon.survey.enums.DassRoleEnum;
 import com.tricon.survey.jpa.repository.DassQuestionRepo;
 import com.tricon.survey.jpa.repository.DassResponseRepo;
+import com.tricon.survey.jpa.repository.DassScoreRepo;
 import com.tricon.survey.jpa.repository.DassUserRepo;
 import com.tricon.survey.jpa.repository.DassUserRoleRepo;
 import com.tricon.survey.security.JwtUser;
@@ -50,6 +55,9 @@ public class UserServiceImpl {
 	
 	@Autowired
 	DassResponseRepo dassResponseRepo;
+	
+	@Autowired
+	DassScoreRepo dassScoreRepo;
 	
 	@Transactional(rollbackOn = Exception.class)
 	public GenericResponse registerUser(UserRegistrationDto dto) throws Exception {
@@ -119,10 +127,10 @@ public class UserServiceImpl {
 
 		// if user is retake then we edit exist user response
 
-		DassInterpritingDto existingDassScoreUser = this.fetchDassScore(jwtUser);
+		int existingDassScoreUser = dassResponseRepo.countDassResponseByUserUuid(dassUser.getUuid());
 
-		if (existingDassScoreUser != null) {
-			dassResponseRepo.removeRetakeUserData(existingDassScoreUser.getDassUserUuid());
+		if (existingDassScoreUser > 0) {
+			dassResponseRepo.removeRetakeUserData(dassUser.getUuid());
 		}
 
 		dto.getData().forEach(x -> {
@@ -132,6 +140,7 @@ public class UserServiceImpl {
 			response.setQuestionId(question);
 			response.setResponse(x.getResponseStatus());
 			response.setUser(dassUser);
+			response.setCreatedDate(Timestamp.from(Instant.now()));
 			dassResponseRepo.save(response);
 			dassUser.setFirstTimeUser(false);
 			userRepo.save(dassUser);
@@ -153,7 +162,8 @@ public class UserServiceImpl {
 		return null;
 	}
 
-	public DassInterpritingDto fetchDassScore(JwtUser jwtUser) throws Exception {
+	@Transactional(rollbackOn = Exception.class)
+	public DassInterpritingDto calculateDassScore(JwtUser jwtUser) throws Exception {
 
 		DassUser dassUser = userRepo.findByEmail(jwtUser.getUsername());
 
@@ -185,6 +195,25 @@ public class UserServiceImpl {
 		DassInterpritingDto.DassFinalScore finalDassScore = new DassInterpritingDto().new DassFinalScore();
 		finalDassScore.setFinalScore(depressionScore + anxityScore + stressScore);
 		responseDto.setFinalDassScore(finalDassScore);
+
+		// save Dass score
+
+		DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
+		if (existingScore == null) {
+			DassScore dassScore = new DassScore();
+			dassScore.setDepressionScore(depressionScore);
+			dassScore.setAnxityScore(anxityScore);
+			dassScore.setStressScore(stressScore);
+			dassScore.setUser(dassUser);
+			dassScoreRepo.save(dassScore);
+		} else {
+
+			// edit existing score
+			existingScore.setDepressionScore(depressionScore);
+			existingScore.setAnxityScore(anxityScore);
+			existingScore.setStressScore(stressScore);
+			dassScoreRepo.save(existingScore);
+		}
 		return responseDto;
 	}
 }

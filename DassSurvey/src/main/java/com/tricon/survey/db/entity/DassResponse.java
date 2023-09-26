@@ -1,5 +1,7 @@
 package com.tricon.survey.db.entity;
 
+import java.util.Date;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -8,6 +10,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
+import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
 
 import lombok.Data;
@@ -33,5 +36,9 @@ public class DassResponse {
 	
 	@Column(nullable = false, columnDefinition = "TINYINT(5)")
 	private int response;
+	
+	@CreationTimestamp
+	@Column(name = "created_date")
+	private Date createdDate;
 
 }
