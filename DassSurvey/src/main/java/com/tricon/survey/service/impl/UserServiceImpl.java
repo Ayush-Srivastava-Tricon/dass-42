@@ -16,7 +16,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tricon.survey.customQuery.dto.DassResponseDto;
-import com.tricon.survey.customQuery.dto.DassScoreDto;
 import com.tricon.survey.db.entity.DassQuestion;
 import com.tricon.survey.db.entity.DassResponse;
 import com.tricon.survey.db.entity.DassScore;
