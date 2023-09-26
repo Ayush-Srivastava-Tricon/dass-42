@@ -1,7 +1,7 @@
 export default class Utils {
 
     static setRefreshToken(data: any) {
-        localStorage.setItem("token", (<any>data)[0].token);
+        localStorage.setItem("token", (<any>JSON.stringify((data)[0].token)));
      }
 
      static logout() {
@@ -10,6 +10,6 @@ export default class Utils {
      }
 
      static getToken(){
-      return localStorage.getItem("token");
+      return JSON.parse(<any>localStorage.getItem("token"));
      }
 }

@@ -36,5 +36,6 @@ export class LoginComponent {
   setLocalData(userData:any){
     localStorage.setItem("isUserLogged", JSON.stringify(this.isLoggedIn));
     localStorage.setItem("userData",JSON.stringify(userData));
+    localStorage.setItem("token",JSON.stringify(userData.token));
   }
 }

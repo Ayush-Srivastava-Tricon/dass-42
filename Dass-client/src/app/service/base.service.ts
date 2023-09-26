@@ -9,12 +9,10 @@ import Utils from '../utils/utils';
 })
 export class BaseService {
 
-   authUrl:any = "http://localhost:3000/api/auth";
-   role:any = "http://localhost:3000/api/roles";
-
    httpUrl:any={
     'login':'/login',
-    'register':'/register'
+    'register':'/register',
+    'fetch-question':'/fetch-questions'
    };
 
   constructor(public http: HttpClient) { }
