@@ -16,6 +16,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
 import com.tricon.survey.customQuery.dto.DassResponseDto;
+import com.tricon.survey.customQuery.dto.DassRetakeResponseDto;
 import com.tricon.survey.db.entity.DassQuestion;
 import com.tricon.survey.db.entity.DassResponse;
 import com.tricon.survey.db.entity.DassScore;
@@ -23,6 +24,7 @@ import com.tricon.survey.db.entity.DassUser;
 import com.tricon.survey.db.entity.DassUserRole;
 import com.tricon.survey.db.entity.DassUserRolePk;
 import com.tricon.survey.dto.DassInterpritingDto;
+import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
 import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
@@ -216,11 +218,16 @@ public class UserServiceImpl {
 		return responseDto;
 	}
 
-	public Boolean checkUserAttemptTest(JwtUser jwtUser) {
+	public DassRetakeTestDto checkUserAttemptTest(JwtUser jwtUser) throws Exception {
+		DassRetakeTestDto dto = null;
 		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
 		if (user != null) {
-			return user.isFirstTimeUser();
+			dto = new DassRetakeTestDto();
+			DassRetakeResponseDto retakeTestDto = dassResponseRepo.findRetakeTestDetailByUserUuid(user.getUuid());
+			dto.setIsFirstTimeUser(user.isFirstTimeUser());
+			dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
+			return dto;
 		}
-		return null;
+		return dto;
 	}
 }

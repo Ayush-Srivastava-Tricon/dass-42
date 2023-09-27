@@ -6,6 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import com.tricon.survey.customQuery.dto.DassResponseDto;
+import com.tricon.survey.customQuery.dto.DassRetakeResponseDto;
 import com.tricon.survey.db.entity.DassResponse;
 
 public interface DassResponseRepo extends JpaRepository<DassResponse, String>{
@@ -27,4 +28,9 @@ public interface DassResponseRepo extends JpaRepository<DassResponse, String>{
 			+ "inner join dass_user du on du.uuid=dr.dass_uuid "
 			+ "where dass_uuid=:uuid")
 	int countDassResponseByUserUuid(@Param("uuid") String uuid);
+	
+	
+	@Query(nativeQuery = true, value = "select DATE_FORMAT(created_date, '%Y-%m-%d %H:%i:%s') as SubmittedDate FROM dass_response "
+			+ "where dass_uuid=:uuid order by created_date desc limit 1")
+	 DassRetakeResponseDto findRetakeTestDetailByUserUuid(@Param("uuid") String uuid);
 }

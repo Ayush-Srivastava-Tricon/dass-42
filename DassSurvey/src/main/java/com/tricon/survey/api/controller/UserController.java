@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tricon.survey.db.entity.DassQuestion;
 import com.tricon.survey.dto.DassInterpritingDto;
+import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
 import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
@@ -115,7 +116,7 @@ public class UserController {
 	
 	@GetMapping(value = "/checkUserAttemptTest")
 	public ResponseEntity<?> isFirstTimeUser() {
-		Boolean response = null;
+		DassRetakeTestDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = authentication.getPrincipal();
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
