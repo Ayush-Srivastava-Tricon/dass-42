@@ -221,6 +221,6 @@ public class UserServiceImpl {
 		if (user != null) {
 			return user.isFirstTimeUser();
 		}
-		return false;
+		return null;
 	}
 }
