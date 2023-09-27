@@ -215,4 +215,12 @@ public class UserServiceImpl {
 		}
 		return responseDto;
 	}
+
+	public Boolean checkUserAttemptTest(JwtUser jwtUser) {
+		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
+		if (user != null) {
+			return user.isFirstTimeUser();
+		}
+		return false;
+	}
 }
