@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -61,6 +62,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/fetch-questions")
+	@PreAuthorize("hasRole('NORMAL')")
 	public ResponseEntity<?> getQuestions() {
 		List<DassQuestion> response = null;
 		try {
@@ -74,6 +76,7 @@ public class UserController {
 	}
 	
 	@PostMapping(value = "/save_dass_response")
+	@PreAuthorize("hasRole('NORMAL')")
 	public ResponseEntity<?> saveUserDassResponse(@RequestBody UserDassResponseDto dto) {
 		Boolean response = null;
 
@@ -98,6 +101,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/fetch_dass_score")
+	@PreAuthorize("hasRole('NORMAL')")
 	public ResponseEntity<?> fetchDassScore() {
 		DassInterpritingDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -115,6 +119,7 @@ public class UserController {
 	}
 	
 	@GetMapping(value = "/checkUserAttemptTest")
+	@PreAuthorize("hasRole('NORMAL')")
 	public ResponseEntity<?> isFirstTimeUser() {
 		DassRetakeTestDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
