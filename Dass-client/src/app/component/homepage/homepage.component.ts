@@ -18,6 +18,7 @@ export class HomepageComponent {
   isRetestEnable:boolean=false;
   loader:boolean=false;
   dassScore:any = {'anxiety':'','depress':'','stress':''};
+  numberOfDassQuestion:number=42;
 
   constructor(private _service:ApplicationService){}
 

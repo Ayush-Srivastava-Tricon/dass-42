@@ -36,7 +36,7 @@
   
   </div>
   <div class="text-center mb-5">
-    <button type="submit" class="btn btn-primary" (click)="submitAnswer()">Submit</button>
+    <button type="submit" class="btn btn-primary" [ngClass]="{'btn-disabled':answersList?.length != numberOfDassQuestion}" [disabled]="answersList?.length != numberOfDassQuestion" (click)="submitAnswer()">Submit</button>
   </div>
 </ng-container>
 
