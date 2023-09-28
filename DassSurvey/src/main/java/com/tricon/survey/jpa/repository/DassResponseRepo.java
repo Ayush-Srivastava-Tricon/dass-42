@@ -31,6 +31,6 @@ public interface DassResponseRepo extends JpaRepository<DassResponse, String>{
 	
 	
 	@Query(nativeQuery = true, value = "select DATE_FORMAT(created_date, '%Y-%m-%d %H:%i:%s') as SubmittedDate FROM dass_response "
-			+ "where dass_uuid=:uuid order by created_date desc limit 1")
+			+ "where dass_uuid=:uuid and created_date is not null order by created_date desc limit 1")
 	 DassRetakeResponseDto findRetakeTestDetailByUserUuid(@Param("uuid") String uuid);
 }
