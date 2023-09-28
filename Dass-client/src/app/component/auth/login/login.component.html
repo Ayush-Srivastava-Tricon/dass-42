@@ -6,15 +6,15 @@
           <label for="Email">Email</label>
         <input type="text" id="Email" formControlName = 'username'  placeholder="Enter your username">
   
-        <label for="password">Password</label>
+        <label for="password" class="mt-2">Password</label>
         <input type="password" id="password" formControlName = 'password' placeholder="Enter your password">
         
         <div class="error" *ngIf="error">
                 {{error}}.
         </div>
         
-        <button type="submit" (click)="login()" [disabled]="loginModal.invalid" [ngClass]="{'btn-disabled':loginModal.invalid}">Login</button>
-        <a href="javascript:void(0);" [routerLink]="['/signup']">SignUp</a>
+        <button type="submit" class="mt-4" (click)="login()" [disabled]="loginModal.invalid" [ngClass]="{'btn-disabled':loginModal.invalid}">Login</button>
+        <a href="javascript:void(0);" class="signup" [routerLink]="['/signup']">SignUp</a>
     </div>
     </div>
   </div>

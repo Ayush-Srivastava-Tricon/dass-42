@@ -1,25 +1,45 @@
 <ng-container *ngIf="questionList.length>0 && !loader">
-  <div class="container my-3">
-    <h2 class="text-center my-3 mb-5 text-decoration-underline">DASS-42 Questionnaire</h2>
-    <div class="row justify-content-start">
-      <ng-container *ngFor="let que of questionList;let idx=index;">
-        <div class="col-sm-6 my-2 px-3">
-          <label for="question{{idx+1}}" class="fw-bold">{{idx+1}}. {{que.question}}.</label>
-          <ng-container *ngFor="let choice of que.choices;let i = index;">
+  <div class="container my-4 pt-4 bg-body rounded shadow-sm">
+    <h2 class="text-center my-3 mb-5">DASS-42 Questionnaire</h2>
+    <div class="Rtable Rtable--5cols Rtable--collapse">
+      <div class="Rtable-row Rtable-row--head">
+        <div class="Rtable-cell date-cell column-heading">Questionnaire 1 to 42</div>
+        <div class="Rtable-cell topic-cell column-heading">Nothing</div>
+        <div class="Rtable-cell access-link-cell column-heading">Sometimes</div>
+        <div class="Rtable-cell replay-link-cell column-heading">Often</div>
+        <div class="Rtable-cell pdf-cell column-heading">Heavily</div>
+      </div>
+  
+      <div class="Rtable-row" *ngFor="let que of questionList;let idx=index;">
+        <div class="Rtable-cell date-cell">
+          <div class="Rtable-cell--content date-content"><label for="question{{idx+1}}" class="questionLable"><span>{{idx+1}}</span> {{que.question}}.</label></div>
+        </div>
+        <div class="Rtable-cell topic-cell " *ngFor="let choice of que.choices;let i = index;">
+          <div class="Rtable-cell--content title-content  ">
             <div class="form-check">
-              <input type="radio" (change)="selectChoiceCrossQuestion($event,que.id)" class="form-check-input"
-                id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i">
+              <input type="radio" (change)="selectChoiceCrossQuestion($event,que._id)" class="form-check-input" id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i">
               <label class="form-check-label" for="{{idx}}{{i}}question">{{choice}}</label>
             </div>
-          </ng-container>
+          </div>
         </div>
-      </ng-container>
+  
+      </div>
+  
+  
+  
     </div>
-    <div class="text-center my-3">
-      <button type="submit" class="btn btn-primary" (click)="submitAnswer()">Submit</button>
-    </div>
+  
+  
+  
+  
+  
+  
+  </div>
+  <div class="text-center mb-5">
+    <button type="submit" class="btn btn-primary" (click)="submitAnswer()">Submit</button>
   </div>
 </ng-container>
+
 <ng-container *ngIf="questionList.length == 0 && !loader">
       <div class="container">
         <div class="row my-4 justify-content-center align-items-center ">
@@ -44,7 +64,7 @@
                       <table class="table table-bordered">
                         <thead>
                           <tr>
-                            <th scope="col"></th>
+                            <th scope="col">DASS (42) Scoring Guide</th>
                             <th scope="col">Depression</th>
                             <th scope="col">Anxiety</th>
                             <th scope="col">Stress</th>
