@@ -12,7 +12,10 @@ export class BaseService {
    httpUrl:any={
     'login':'/login',
     'register':'/register',
-    'fetch-question':'/fetch-questions'
+    'fetch-question':'/fetch-questions',
+    'submit-dass-response':'/save_dass_response',
+    'fetch-dass-score':'/fetch_dass_score',
+    'checkUserAttemptTest':'/checkUserAttemptTest'
    };
 
   constructor(public http: HttpClient) { }

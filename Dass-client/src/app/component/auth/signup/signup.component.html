@@ -1,25 +1,25 @@
 <div class="outer-container">
     <div class="container">
         <div class="card">
-            <h2>Login Form</h2>
-      <div>
+            <h2>Signup Form</h2>
+      <div [formGroup]="signUpModal">
           <label for="fname">First Name</label>
-        <input type="text" id="fname" [(ngModel)]="signUpObj['firstName']"  placeholder="Enter your First Name">
+        <input type="text" id="fname" formControlName ='firstName'  placeholder="Enter your First Name">
 
         <label for="lname">Last Name</label>
-        <input type="text" id="lname" [(ngModel)]="signUpObj['lastName']"  placeholder="Enter your Last Name">
+        <input type="text" id="lname" formControlName ='lastName'  placeholder="Enter your Last Name">
 
           <label for="email">Email</label>
-        <input type="text" id="email" [(ngModel)]="signUpObj['email']"  placeholder="Enter your Email">
+        <input type="text" id="email" formControlName ='email'  placeholder="Enter your Email">
 
         <label for="password">Password</label>
-        <input type="text" id="password" [(ngModel)]="signUpObj['password']" placeholder="Enter your Password">
+        <input type="text" id="password" formControlName ='password' placeholder="Enter your Password">
         
-        <div class="error" *ngIf="error">
+        <div class="error text-danger my-2" *ngIf="error">
                 {{error}}
         </div>
         
-        <button type="submit" (click)="register()">Register</button>
+        <button type="submit" (click)="register()" [disabled]="signUpModal.invalid" [ngClass]="{'btn-disabled':signUpModal.invalid}">Register</button>
         <a href="javascript:void(0);" [routerLink]="['/login']">Login</a>
     </div>
     </div>

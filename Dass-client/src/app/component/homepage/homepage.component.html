@@ -1,48 +1,101 @@
-<nav class="navbar navbar-expand-lg nav-bg-color" data-bs-theme="dark">
-    <div class="container-fluid">
-      <a class="navbar-brand" href="javascript:void(0);" [routerLink]="['/homepage']">Dass-42</a>
-      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-        <span class="navbar-toggler-icon"></span>
-      </button>
-      <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav">
-          <li class="nav-item">
-            <a class="nav-link active"  routerLinkActive="homepage" aria-current="page" href="javascript:void(0);" [routerLink]="['/homepage']">Home</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0);" routerLinkActive="activity" [routerLink]="['/activity']">Activity</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="javascript:void(0);" routerLinkActive="quotes" [routerLink]="['/quotes']">Quotes</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" aria-disabled="true">Retest ? </a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" (click)="logout()" aria-disabled="true">Logout </a>
-          </li>
-        </ul>
-    </div>
-    <h6>Hi, {{user?.firstName|titlecase}}</h6>
-    <!-- <a href="javascript:void(0);" [routerLink]="[]"" (click)="logout()">Logout</a> -->
-  </div>
-  </nav>
+<ng-container *ngIf="questionList.length>0 && !loader">
   <div class="container my-3">
     <h2 class="text-center my-3 mb-5 text-decoration-underline">DASS-42 Questionnaire</h2>
     <div class="row justify-content-start">
       <ng-container *ngFor="let que of questionList;let idx=index;">
-                <div class="col-sm-6 my-2 px-3">
-                  <label for="question{{idx+1}}" class="fw-bold">{{idx+1}}. {{que.question}}.</label>
-                  <ng-container *ngFor="let choice of que.choices;let i = index;">
-                      <div class="form-check">
-                          <input type="radio" (change)="selectChoiceCrossQuestion($event,que._id)" class="form-check-input" id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i+1">
-                          <label class="form-check-label" for="{{idx}}{{i}}question">{{choice}}</label>
-                      </div>
-                  </ng-container>
+        <div class="col-sm-6 my-2 px-3">
+          <label for="question{{idx+1}}" class="fw-bold">{{idx+1}}. {{que.question}}.</label>
+          <ng-container *ngFor="let choice of que.choices;let i = index;">
+            <div class="form-check">
+              <input type="radio" (change)="selectChoiceCrossQuestion($event,que.id)" class="form-check-input"
+                id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i">
+              <label class="form-check-label" for="{{idx}}{{i}}question">{{choice}}</label>
+            </div>
+          </ng-container>
+        </div>
+      </ng-container>
+    </div>
+    <div class="text-center my-3">
+      <button type="submit" class="btn btn-primary" (click)="submitAnswer()">Submit</button>
+    </div>
+  </div>
+</ng-container>
+<ng-container *ngIf="questionList.length == 0 && !loader">
+      <div class="container">
+        <div class="row my-4 justify-content-center align-items-center ">
+          <div class="col-sm-12">
+            <div class="thankyou-box">
+              <div class="container">
+                <div class="row align-items-center">
+                  <div class="col-sm-12 text-center p-3 thankyou-title"> <h1>Thankyou For Your Response !</h1> </div>
                 </div>
-              </ng-container>
-        </div>
-        <div class="text-center">
-          <button type="submit" class="btn btn-primary" (click)="submitAnswer()">Submit</button>
-        </div>
+                <div class="row flex-column">
+                  <div class="col-sm-12">
+                    <div class="text-center p-3 thankyou-title">Your Calculated Dass Score</div>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="text-center p-3 thankyou-title"> Depression : {{dassScore.depress}} , Anxiety: {{dassScore.anxiety}} , Stress : {{dassScore.stress }} </div>
+                  </div>
+                </div>
+                <div class="row justify-content-center align-items-center">
+                    <div class="col-sm-6"> 
+                      <table class="table table-bordered">
+                        <thead>
+                          <tr>
+                            <th scope="col"></th>
+                            <th scope="col">Depression</th>
+                            <th scope="col">Anxiety</th>
+                            <th scope="col">Stress</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <tr>
+                            <th scope="row">Normal</th>
+                            <td>0-9</td>
+                            <td>0-7</td>
+                            <td>0-14</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Mild</th>
+                            <td>10-13</td>
+                            <td>8-9 </td>
+                            <td>15-18</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Moderate</th>
+                            <td>14-20</td>
+                            <td>10-14</td>
+                            <td>19-25</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Severe</th>
+                            <td>21-27</td>
+                            <td>15-19</td>
+                            <td>26-33</td>
+                          </tr>
+                          <tr>
+                            <th scope="row">Extremely Severe</th>
+                            <td>28+</td>
+                            <td>20+</td>
+                            <td>34+</td>
+                          </tr>
+                        </tbody>
+                      </table>
+                    </div>
+                  </div>
+                  
+                </div>
+              </div>
+            </div>
+          </div>
+      </div>
+</ng-container>
+<div class="d-flex align-items-center justify-content-center" *ngIf="loader">
+  <div class="spinner spinner-border text-primary" role="status">
+    <span class="sr-only"></span>
+  </div>
+</div>
+
    

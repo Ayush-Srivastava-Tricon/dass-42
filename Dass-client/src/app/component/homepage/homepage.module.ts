@@ -3,13 +3,15 @@ import { CommonModule } from '@angular/common';
 
 import { HomepageRoutingModule } from './homepage-routing.module';
 import { HomepageComponent } from './homepage.component';
+import { HeaderModule } from '../header/header.module';
 
 
 @NgModule({
   declarations: [HomepageComponent],
   imports: [
     CommonModule,
-    HomepageRoutingModule
+    HomepageRoutingModule,
+    HeaderModule
   ],
   exports:[HomepageComponent]
 })

@@ -1,9 +1,22 @@
-.nav-bg-color{
-    background-color: #28224e;
-    color:#fff;
-}
+
 
 .btn-primary{
     background-color: #28224e;
     border: none;
 }
+
+.thankyou-box{
+    background-color: #28224e;
+    border: 2px solid white;
+    width: auto;
+    height: auto;
+    display: block;
+    padding: 50px;
+
+
+    .thankyou-title{
+            color: white;
+            position: relative;
+    }
+}
+

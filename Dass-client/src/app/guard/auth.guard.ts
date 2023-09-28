@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot, UrlTree } from '@angular/router';
 import { Observable } from 'rxjs';
+import Utils from '../utils/utils';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +14,7 @@ export class AuthGuard implements CanActivate {
   canActivate(
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot):boolean {
-    const isUserLogged :boolean = JSON.parse(<any>localStorage.getItem("isUserLogged"));
+    const isUserLogged :boolean = Utils.isUserLoggedIn();
 
     if(isUserLogged){
       return true;

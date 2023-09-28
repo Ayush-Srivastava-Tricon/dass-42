@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { ApplicationService } from 'src/app/service/application.service';
+import Utils from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-homepage',
@@ -11,30 +12,71 @@ export class HomepageComponent {
   user:any;
   questionList:any=[];
   answersList:any=[];
+  isRetakenTest:boolean=true;
+  isFirstTimeUser:boolean=false;
+  testSubmittedDate:any= new Date();
+  isRetestEnable:boolean=false;
+  loader:boolean=false;
+  dassScore:any = {'anxiety':'','depress':'','stress':''};
 
   constructor(private _service:ApplicationService){}
 
   ngOnInit(){
-      const localData :any = JSON.parse(<any>localStorage.getItem("userData"));
+      const localData :any = Utils.getUserData();
       if(localData){
         this.user = localData;
-        console.log(this.user);
-        
+        this.checkUserAttemptTestFirstTime();
       }
-      this.getDass42Questions();
+  }
+
+  checkUserAttemptTestFirstTime(){
+    this.loader=true;
+    this._service.checkUserAttemptTest((res:any)=>{
+      if(res.status && res.data){
+          this.isFirstTimeUser = res.data?.isFirstTimeUser;
+          this.testSubmittedDate = res.data?.submittedDate;
+          if(this.isFirstTimeUser){
+            this.getDass42Questions();
+          } else{
+            this.availableForRetest();
+          }
+      }
+      
+    })
+    console.log(32);
+    
+  }
+
+  availableForRetest(){
+      const todayDate:any = new Date();
+      let previousSubmittedDate:any = new Date(this.testSubmittedDate);
+      const diffTime = Math.abs(todayDate - previousSubmittedDate);
+      const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)); 
+      this.loader=false;
+      if(diffDays >= 14){
+        this.isRetestEnable = true;
+        this.isRetakenTest = true;
+        this.getDass42Questions();
+      } else{
+        this.fetchDassScore();
+      }
   }
 
   getDass42Questions(){
+    this.loader=true;
     this._service.fetchDass42Question((res:any)=>{
-      console.log(res);
-      this.questionList = res.data;
-      this.setChoices(this.questionList);
+      if(res.status && res.data){
+        this.loader=false;
+        this.questionList = res.data;
+        this.setChoices(this.questionList);
+      } else{
+        //error part
+      }
       
     })
   }
 
   setChoices(data:any){
-
     data.forEach((e:any)=>{
           e['choices'] = ['Nothing','Sometimes','Often','Heavily'];
     })
@@ -42,24 +84,49 @@ export class HomepageComponent {
   }
 
   selectChoiceCrossQuestion(event:any,id:any){
-    let params=[];
-    this.questionList.forEach((data:any,idx:any)=>{
-      if(data._id == id){
-        this.answersList.push({questionId:id,choice:event.target.value});
-      }
+    this.questionList.forEach((data:any)=>{
+        if(this.answersList.length>0){
+            let responseExist = this.answersList.some((item:any)=>item.questionId == id);
+            if(!responseExist){
+              this.answersList.push({questionId:id,responseStatus:+event.target.value});
+            } else{
+                  this.answersList.forEach((e:any)=>{
+                        if(e.questionId == id){
+                          e.responseStatus = +event.target.value;
+                        }
+                  })
+            }
+        } else{
+            data.id == id ? this.answersList.push({questionId:id,responseStatus:+event.target.value}) : '';
+        }
     })
     
   }
   
   submitAnswer(){
-    this._service.submitAnswers({'answer':this.answersList,userId:this.user._id},(res:any)=>{
-      console.log(res);
+    let params:any={
+      'data':this.answersList,
+      "retakeSurvey":this.isRetakenTest
+    };
+
+    this._service.submitAnswers(params,(res:any)=>{
+        if(res){
+          this.questionList=[];
+          this.fetchDassScore();
+
+        }
     })
   }
 
-  logout(){
-    sessionStorage.clear();
-    localStorage.clear();
-    location.reload();
+  fetchDassScore(){
+    this._service.fetchDassScore((res:any)=>{
+      if(res.status && res.data){
+        console.log(res);
+        this.dassScore.anxiety = res.data.anxityScore;
+        this.dassScore.depress = res.data.depressionScore;
+        this.dassScore.stress = res.data.stressScore;
+      }
+    })
   }
+
 }

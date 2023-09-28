@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import Utils from './utils/utils';
 
 @Component({
   selector: 'app-root',
@@ -7,4 +8,10 @@ import { Component } from '@angular/core';
 })
 export class AppComponent {
   title = 'health-management';
+
+  constructor(){}
+
+  isUserLoggedIn(){
+    return Utils.isUserLoggedIn();
+  }
 }

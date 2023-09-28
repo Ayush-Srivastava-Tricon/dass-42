@@ -5,15 +5,17 @@ import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
 import { AuthGuard } from './guard/auth.guard';
 import { TokenInterceptor } from './token/token.interceptor';
+import { HeaderModule } from './component/header/header.module';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    HeaderModule
   ],
   providers: [AuthGuard,
   {

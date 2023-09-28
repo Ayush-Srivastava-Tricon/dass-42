@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import Utils from 'src/app/utils/utils';
 
 @Component({
   selector: 'app-login',
@@ -9,33 +11,33 @@ import { AuthService } from 'src/app/service/auth.service';
 })
 export class LoginComponent {
 
-  loginObj = {'email':'','password':''};
   error:any;
   isLoggedIn:boolean=false;
+  loginModal:any;
 
-  constructor(private auth:AuthService,private router:Router){}
+  constructor(private auth:AuthService,private router:Router,private fb:FormBuilder){
+    this.loginModal = this.fb.group({
+      'username':['',Validators.required],
+      'password':['',Validators.required]
+    })
+  }
 
   login(){
-    let param={
-      'username':this.loginObj['email'],
-      'password':this.loginObj['password']
-    };
-      this.auth.login(param,(res:any)=>{
-        if(res.status){
+      this.auth.login(this.loginModal.value,(res:any)=>{
+        console.log(32);
+        if(res.status && res.data){
           console.log(res);
           this.error = '';
           this.isLoggedIn=true;
           this.setLocalData(res.data);
           this.router.navigate(['homepage']);
         } else{
-          this.error = res.message;
+          this.error = res.error ? res.error : res.message;
         }
       })
   }
 
   setLocalData(userData:any){
-    localStorage.setItem("isUserLogged", JSON.stringify(this.isLoggedIn));
-    localStorage.setItem("userData",JSON.stringify(userData));
-    localStorage.setItem("token",JSON.stringify(userData.token));
+    Utils.setUserData(userData,this.isLoggedIn);
   }
 }

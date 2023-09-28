@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { FormBuilder, Validators } from '@angular/forms';
 import { AuthService } from 'src/app/service/auth.service';
 
 @Component({
@@ -8,23 +9,26 @@ import { AuthService } from 'src/app/service/auth.service';
 })
 export class SignupComponent {
 
-  signUpObj:any = {};
   error:any;
+  signUpModal:any;
 
-  constructor(private auth:AuthService){}
+  constructor(private auth:AuthService,private fb:FormBuilder){
+    this.signUpModal = this.fb.group({
+      'firstName':['',Validators.required],
+      'lastName':['',Validators.required],
+      'email':['',Validators.required],
+      'password':['',Validators.required],
+    })
+  }
 
   register(){
 
-    let params:any={
-      'firstName':this.signUpObj['firstName'],
-      'lastName':this.signUpObj['lastName'],
-      'email':this.signUpObj['email'],
-      'password':this.signUpObj['password']
-    };
-
-    this.auth.register(params,(res:any)=>{
-      if(res){
+    this.auth.register( this.signUpModal.value,(res:any)=>{
+      if(res.status && !res.data){
+        this.error = res.message;
         console.log(res);
+      } else{
+          this.error = res.data.email;
       }
     })
 

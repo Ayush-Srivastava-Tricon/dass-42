@@ -20,6 +20,16 @@ const routes: Routes = [
     path:'homepage',
     loadChildren:()=>import("./component/homepage/homepage.module").then(m=>m.HomepageModule),
     canActivate:[AuthGuard]
+  },
+  {
+    path:'activity',
+    loadChildren:()=>import("./component/activity/activity.module").then(m=>m.ActivityModule),
+    canActivate:[AuthGuard]
+  },
+  {
+    path:'quotes',
+    loadChildren:()=>import("./component/quotes/quotes.module").then(m=>m.QuotesModule),
+    canActivate:[AuthGuard]
   }
 ];
 
