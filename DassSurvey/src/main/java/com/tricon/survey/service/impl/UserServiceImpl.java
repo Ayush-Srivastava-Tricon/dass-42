@@ -224,9 +224,11 @@ public class UserServiceImpl {
 		if (user != null) {
 			dto = new DassRetakeTestDto();
 			DassRetakeResponseDto retakeTestDto = dassResponseRepo.findRetakeTestDetailByUserUuid(user.getUuid());
-			dto.setIsFirstTimeUser(user.isFirstTimeUser());
-			dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
-			return dto;
+			if (retakeTestDto != null) {
+				dto.setIsFirstTimeUser(user.isFirstTimeUser());
+				dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
+				return dto;
+			}
 		}
 		return dto;
 	}
