@@ -227,7 +227,9 @@ public class UserServiceImpl {
 			if (retakeTestDto != null) {
 				dto.setIsFirstTimeUser(user.isFirstTimeUser());
 				dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
-				return dto;
+			} else {
+				dto.setIsFirstTimeUser(user.isFirstTimeUser());
+				dto.setSubmittedDate(null);
 			}
 		}
 		return dto;
