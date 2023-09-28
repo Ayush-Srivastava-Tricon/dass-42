@@ -12,7 +12,7 @@ export class HomepageComponent {
   user:any;
   questionList:any=[];
   answersList:any=[];
-  isRetakenTest:boolean=true;
+  isRetakenTest:boolean=false;
   isFirstTimeUser:boolean=false;
   testSubmittedDate:any= new Date();
   isRetestEnable:boolean=false;

@@ -17,7 +17,7 @@
         <div class="Rtable-cell topic-cell " *ngFor="let choice of que.choices;let i = index;">
           <div class="Rtable-cell--content title-content  ">
             <div class="form-check">
-              <input type="radio" (change)="selectChoiceCrossQuestion($event,que._id)" class="form-check-input" id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i">
+              <input type="radio" (change)="selectChoiceCrossQuestion($event,que.id)" class="form-check-input" id="{{idx}}{{i}}question" name="question{{idx+1}}" [value]="i">
               <label class="form-check-label" for="{{idx}}{{i}}question">{{choice}}</label>
             </div>
           </div>
