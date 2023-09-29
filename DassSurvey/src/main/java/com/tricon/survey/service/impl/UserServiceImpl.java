@@ -12,6 +12,11 @@ import javax.transaction.Transactional;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +31,7 @@ import com.tricon.survey.db.entity.DassUserRolePk;
 import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
+import com.tricon.survey.dto.QuestionPaginationDto;
 import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
 import com.tricon.survey.enums.DassCategory;
@@ -59,6 +65,9 @@ public class UserServiceImpl {
 	
 	@Autowired
 	DassScoreRepo dassScoreRepo;
+	
+	@Value("${data.totalRecordperPage}")
+	private int totalRecordsperPage;
 	
 	@Transactional(rollbackOn = Exception.class)
 	public GenericResponse registerUser(UserRegistrationDto dto) throws Exception {
@@ -233,5 +242,23 @@ public class UserServiceImpl {
 			}
 		}
 		return dto;
+	}
+
+	public List<QuestionPaginationDto> fetchQuestionsUsingPagination(int pageNumber)throws Exception  {
+		List<QuestionPaginationDto> listDto = null;
+		QuestionPaginationDto paginationDto = null;
+		Pageable paging = PageRequest.of(pageNumber, totalRecordsperPage, Sort.by("Id").ascending());
+		Page<DassQuestion> data = questionRepo.findAll(paging);
+		if (!data.isEmpty() && data != null) {
+			listDto = new ArrayList<>();
+			paginationDto = new QuestionPaginationDto();
+			paginationDto.setData(data.getContent());
+			paginationDto.setPageNumber(data.getNumber());
+			paginationDto.setTotalElements(data.getTotalElements());
+			paginationDto.setHasNextElement(data.hasNext());
+			paginationDto.setPageSize(data.getSize());
+			listDto.add(paginationDto);
+		}
+		return listDto;
 	}
 }
