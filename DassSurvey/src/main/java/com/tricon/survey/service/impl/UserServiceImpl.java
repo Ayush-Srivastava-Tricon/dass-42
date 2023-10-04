@@ -157,10 +157,11 @@ public class UserServiceImpl {
 		}
 		
 		//if user is retake test then remove previous dass score by default
-//		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
-//			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
-//			dassScoreRepo.delete(existingScore);
-//		}
+		
+		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
+			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
+			dassScoreRepo.delete(existingScore);
+		}
 
 		dto.getData().forEach(x -> {
 			DassResponse response = new DassResponse();
