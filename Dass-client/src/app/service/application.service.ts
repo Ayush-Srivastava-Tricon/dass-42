@@ -26,4 +26,8 @@ export class ApplicationService extends BaseService {
    submitAnswers(params:any,callback:any){
     this.postData(params,this.httpUrl['submit-dass-response'],callback);
    }
+
+   fetchActivity(callback:any){
+    this.getData({},this.httpUrl['fetch-task'],callback);
+   }
 }

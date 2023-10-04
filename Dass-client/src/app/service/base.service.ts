@@ -15,7 +15,8 @@ export class BaseService {
     'fetch-question':'/fetch-questions',
     'submit-dass-response':'/save_dass_response',
     'fetch-dass-score':'/fetch_dass_score',
-    'checkUserAttemptTest':'/checkUserAttemptTest'
+    'checkUserAttemptTest':'/checkUserAttemptTest',
+    'fetch-task':'/fetch-task',
    };
 
   constructor(public http: HttpClient) { }
