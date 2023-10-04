@@ -3,6 +3,7 @@ package com.tricon.survey.service.impl;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -23,8 +24,10 @@ import org.springframework.stereotype.Service;
 import com.tricon.survey.customQuery.dto.DassResponseDto;
 import com.tricon.survey.customQuery.dto.DassRetakeResponseDto;
 import com.tricon.survey.db.entity.DassQuestion;
+import com.tricon.survey.db.entity.DassQuotes;
 import com.tricon.survey.db.entity.DassResponse;
 import com.tricon.survey.db.entity.DassScore;
+import com.tricon.survey.db.entity.DassTask;
 import com.tricon.survey.db.entity.DassUser;
 import com.tricon.survey.db.entity.DassUserRole;
 import com.tricon.survey.db.entity.DassUserRolePk;
@@ -32,13 +35,17 @@ import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
 import com.tricon.survey.dto.QuestionPaginationDto;
+import com.tricon.survey.dto.QuotesDto;
+import com.tricon.survey.dto.TaskDto;
 import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
 import com.tricon.survey.enums.DassCategory;
 import com.tricon.survey.enums.DassRoleEnum;
 import com.tricon.survey.jpa.repository.DassQuestionRepo;
+import com.tricon.survey.jpa.repository.DassQuoteRepo;
 import com.tricon.survey.jpa.repository.DassResponseRepo;
 import com.tricon.survey.jpa.repository.DassScoreRepo;
+import com.tricon.survey.jpa.repository.DassTaskRepo;
 import com.tricon.survey.jpa.repository.DassUserRepo;
 import com.tricon.survey.jpa.repository.DassUserRoleRepo;
 import com.tricon.survey.security.JwtUser;
@@ -65,6 +72,12 @@ public class UserServiceImpl {
 	
 	@Autowired
 	DassScoreRepo dassScoreRepo;
+	
+	@Autowired
+	DassTaskRepo taskRepo;
+	
+	@Autowired
+	DassQuoteRepo quoteRepo;
 	
 	@Value("${data.totalRecordperPage}")
 	private int totalRecordsperPage;
@@ -142,6 +155,12 @@ public class UserServiceImpl {
 		if (existingDassScoreUser > 0) {
 			dassResponseRepo.removeRetakeUserData(dassUser.getUuid());
 		}
+		
+		//if user is retake test then remove previous dass score by default
+//		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
+//			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
+//			dassScoreRepo.delete(existingScore);
+//		}
 
 		dto.getData().forEach(x -> {
 			DassResponse response = new DassResponse();
@@ -260,5 +279,245 @@ public class UserServiceImpl {
 			listDto.add(paginationDto);
 		}
 		return listDto;
+	}
+
+	public List<TaskDto> fetchTasks(JwtUser jwtUser) throws Exception {
+
+		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
+		DassScore existingScore = dassScoreRepo.findByUserUuid(user.getUuid());
+		boolean isDepression = false;
+		boolean isAnxity = false;
+		boolean isStress = false;
+		List<TaskDto> listOfTask = new ArrayList<>();
+
+		if (existingScore != null) {
+			int depressionScore = existingScore.getDepressionScore();
+			int anxityScore = existingScore.getAnxityScore();
+			int stressScore = existingScore.getStressScore();
+
+			// find Maximum Score
+			int maxScore = depressionScore > anxityScore
+					? ((depressionScore > stressScore) ? depressionScore : stressScore)
+					: ((anxityScore > stressScore) ? anxityScore : stressScore);
+
+			if (depressionScore == maxScore) {
+				isDepression = true;
+			}
+			if (anxityScore == maxScore) {
+				isAnxity = true;
+			}
+			if (stressScore == maxScore) {
+				isStress = true;
+			}
+
+			// check max score is the same to another score or not
+
+			if (isDepression == true && isAnxity == true) {
+
+				List<DassTask> depressionTask = taskRepo.findByCategory(DassCategory.DEPRESSION);
+				List<DassTask> anxityTask = taskRepo.findByCategory(DassCategory.ANXIETY);
+
+				Collections.shuffle(depressionTask);
+				Collections.shuffle(anxityTask);
+
+				depressionTask = depressionTask.subList(0, 3);
+				anxityTask = anxityTask.subList(0, 2);
+
+				logger.info("If Depression and Anxity is same:");
+				logger.info("Number of Depression task:" + depressionTask.size());
+				logger.info("Number of Anxity task:" + anxityTask.size());
+
+				depressionTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+				anxityTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+
+				return listOfTask;
+
+			}
+			if (isDepression == true && isStress == true) {
+
+				List<DassTask> depressionTask = taskRepo.findByCategory(DassCategory.DEPRESSION);
+				List<DassTask> stressTask = taskRepo.findByCategory(DassCategory.STRESS);
+
+				Collections.shuffle(depressionTask);
+				Collections.shuffle(stressTask);
+
+				depressionTask = depressionTask.subList(0, 3);
+				stressTask = stressTask.subList(0, 2);
+
+				logger.info("If Depression and Stress is same:");
+				logger.info("Number of Depression task:" + depressionTask.size());
+				logger.info("Number of Stress task:" + stressTask.size());
+
+				depressionTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+				stressTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+
+				return listOfTask;
+
+			}
+			if (isAnxity == true && isStress == true) {
+				List<DassTask> anxityTask = taskRepo.findByCategory(DassCategory.ANXIETY);
+				List<DassTask> stressTask = taskRepo.findByCategory(DassCategory.STRESS);
+
+				Collections.shuffle(anxityTask);
+				Collections.shuffle(stressTask);
+
+				anxityTask = anxityTask.subList(0, 3);
+				stressTask = stressTask.subList(0, 2);
+
+				logger.info("If Anxity and Stress is same:");
+				logger.info("Number of Anxity task:" + anxityTask.size());
+				logger.info("Number of Stress task:" + stressTask.size());
+
+				anxityTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+				stressTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+
+				return listOfTask;
+			}
+
+			if (isDepression) {
+				List<DassTask> depressionTask = taskRepo.findByCategory(DassCategory.DEPRESSION);
+				Collections.shuffle(depressionTask);
+				depressionTask = depressionTask.subList(0, 5);
+				logger.info("If Depression is Max:");
+				logger.info("Number of Depression task:" + depressionTask.size());
+				depressionTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+			} else if (isAnxity) {
+				List<DassTask> anxityTask = taskRepo.findByCategory(DassCategory.ANXIETY);
+				Collections.shuffle(anxityTask);
+				anxityTask = anxityTask.subList(0, 5);
+				logger.info("If Anxity is Max:");
+				logger.info("Number of Anxity task:" + anxityTask.size());
+				anxityTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+			} else {
+				List<DassTask> stressTask = taskRepo.findByCategory(DassCategory.STRESS);
+				Collections.shuffle(stressTask);
+				stressTask = stressTask.subList(0, 5);
+				logger.info("If Stress is Max:");
+				logger.info("Number of Stress task:" + stressTask.size());
+				stressTask.forEach(x -> {
+					TaskDto taskDto = new TaskDto();
+					taskDto.setTaskName(x.getTask());
+					listOfTask.add(taskDto);
+
+				});
+			}
+
+		}
+
+		return listOfTask;
+	}
+
+	public List<QuotesDto> fetchQuotes(JwtUser jwtUser) throws Exception {
+
+		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
+		DassScore existingScore = dassScoreRepo.findByUserUuid(user.getUuid());
+		boolean isDepression = false;
+		boolean isAnxity = false;
+		boolean isStress = false;
+		List<QuotesDto> listOfQuotes = new ArrayList<>();
+
+		if (existingScore != null) {
+			int depressionScore = existingScore.getDepressionScore();
+			int anxityScore = existingScore.getAnxityScore();
+			int stressScore = existingScore.getStressScore();
+
+			// find Maximum Score
+			int maxScore = depressionScore > anxityScore
+					? ((depressionScore > stressScore) ? depressionScore : stressScore)
+					: ((anxityScore > stressScore) ? anxityScore : stressScore);
+
+			if (depressionScore == maxScore) {
+				isDepression = true;
+			}
+			if (anxityScore == maxScore) {
+				isAnxity = true;
+			}
+			if (stressScore == maxScore) {
+				isStress = true;
+			}
+
+			if (isDepression) {
+				List<DassQuotes> depressionQuotes = quoteRepo.findByCategory(DassCategory.DEPRESSION);
+				Collections.shuffle(depressionQuotes);
+				depressionQuotes = depressionQuotes.subList(0, 1);
+				logger.info("If Depression is Max:");
+				logger.info("Number of Depression Quotes:" + depressionQuotes.size());
+				depressionQuotes.forEach(x -> {
+					QuotesDto quoteDto = new QuotesDto();
+					quoteDto.setQuotesName(x.getQuote());
+					listOfQuotes.add(quoteDto);
+
+				});
+				return listOfQuotes;
+			} else if (isAnxity) {
+				List<DassQuotes> anxityQuotes = quoteRepo.findByCategory(DassCategory.ANXIETY);
+				Collections.shuffle(anxityQuotes);
+				anxityQuotes = anxityQuotes.subList(0, 1);
+				logger.info("If Anxity is Max:");
+				logger.info("Number of Anxity Quotes:" + anxityQuotes.size());
+				anxityQuotes.forEach(x -> {
+					QuotesDto quoteDto = new QuotesDto();
+					quoteDto.setQuotesName(x.getQuote());
+					listOfQuotes.add(quoteDto);
+
+				});
+				return listOfQuotes;
+			} else {
+				List<DassQuotes> stressQuotes = quoteRepo.findByCategory(DassCategory.STRESS);
+				Collections.shuffle(stressQuotes);
+				stressQuotes = stressQuotes.subList(0, 1);
+				logger.info("If Stress is Max:");
+				logger.info("Number of Stress Quotes:" + stressQuotes.size());
+				stressQuotes.forEach(x -> {
+					QuotesDto quoteDto = new QuotesDto();
+					quoteDto.setQuotesName(x.getQuote());
+					listOfQuotes.add(quoteDto);
+
+				});
+				return listOfQuotes;
+			}
+		}
+
+		return null;
 	}
 }

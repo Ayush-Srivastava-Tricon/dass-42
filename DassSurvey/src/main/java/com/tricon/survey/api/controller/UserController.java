@@ -28,6 +28,8 @@ import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
 import com.tricon.survey.dto.QuestionPaginationDto;
+import com.tricon.survey.dto.QuotesDto;
+import com.tricon.survey.dto.TaskDto;
 import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
 import com.tricon.survey.security.JwtUser;
@@ -145,6 +147,42 @@ public class UserController {
 		List<QuestionPaginationDto> response = null;
 		try {
 			response = userService.fetchQuestionsUsingPagination(pageNumber);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", null));
+		}
+		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
+	}
+	
+	@GetMapping(value = "/fetch-task")
+	@PreAuthorize("hasRole('NORMAL')")
+	public ResponseEntity<?> fetchTask() {
+		List<TaskDto> response = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
+		JwtUser jwtUser = (JwtUser) userDetails;
+		try {
+			response = userService.fetchTasks(jwtUser);
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", null));
+		}
+		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
+	}
+	
+	@GetMapping(value = "/fetch-quotes")
+	@PreAuthorize("hasRole('NORMAL')")
+	public ResponseEntity<?> fetchQuotes() {
+		List<QuotesDto> response = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
+		JwtUser jwtUser = (JwtUser) userDetails;
+		try {
+			response = userService.fetchQuotes(jwtUser);
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
