@@ -18,9 +18,25 @@ export class HomepageComponent {
   isRetestEnable:boolean=false;
   loader:boolean=false;
   dassScore:any = {'anxiety':'','depress':'','stress':''};
-  numberOfDassQuestion:number=42;
+  numberOfDassQuestion:number=42;  //42 standard question.
+  pageNumber:number=0;
+  showDassTable:boolean=false;
+  sufferingState:any='';
+
+  questionsPerPage = 14;
+
+  checkboxState: any= new Map();
 
   constructor(private _service:ApplicationService){}
+
+
+  setCheckboxState(questionId: number, responseStatus: number) {
+    this.checkboxState.set(questionId,responseStatus);
+  }
+
+  getCheckboxState(questionId: number) {
+    return this.checkboxState.get(questionId);
+  }
 
   ngOnInit(){
       const localData :any = Utils.getUserData();
@@ -28,6 +44,8 @@ export class HomepageComponent {
         this.user = localData;
         this.checkUserAttemptTestFirstTime();
       }
+    
+      
   }
 
   checkUserAttemptTestFirstTime(){
@@ -65,11 +83,12 @@ export class HomepageComponent {
 
   getDass42Questions(){
     this.loader=true;
-    this._service.fetchDass42Question((res:any)=>{
+    this._service.fetchDass42Question(this.pageNumber,(res:any)=>{
       if(res.status && res.data){
         this.loader=false;
-        this.questionList = res.data;
+        this.questionList = res.data[0].data;
         this.setChoices(this.questionList);
+        console.log(this.checkboxState);
       } else{
         //error part
       }
@@ -79,13 +98,12 @@ export class HomepageComponent {
 
   setChoices(data:any){
     data.forEach((e:any)=>{
-          e['choices'] = ['Nothing','Sometimes','Often','Heavily'];
+          e['choices'] = ['Never','Sometimes','Often','Heavily'];
     })
 
   }
 
   selectChoiceCrossQuestion(event:any,id:any){
-    this.questionList.forEach((data:any)=>{
         if(this.answersList.length>0){
             let responseExist = this.answersList.some((item:any)=>item.questionId == id);
             if(!responseExist){
@@ -98,10 +116,11 @@ export class HomepageComponent {
                   })
             }
         } else{
-            data.id == id ? this.answersList.push({questionId:id,responseStatus:+event.target.value}) : '';
+          this.answersList.push({questionId:id,responseStatus:+event.target.value});
         }
-    })
-    
+        
+        this.setCheckboxState(id,+event.target.value);
+        console.log(this.answersList);
   }
   
   submitAnswer(){
@@ -120,14 +139,38 @@ export class HomepageComponent {
   }
 
   fetchDassScore(){
+    this.loader=true;
     this._service.fetchDassScore((res:any)=>{
       if(res.status && res.data){
-        console.log(res);
+        this.loader=false;
         this.dassScore.anxiety = res.data.anxityScore;
         this.dassScore.depress = res.data.depressionScore;
         this.dassScore.stress = res.data.stressScore;
+        this.sufferingState = this.checkUserSuffersFrom();
       }
     })
+  }
+
+  checkUserSuffersFrom(){
+    if(this.dassScore.depress !== 0 && this.dassScore.depress >= this.dassScore.anxiety && this.dassScore.depress >=  this.dassScore.stress){
+      return "Depression";
+    } else if(this.dassScore.anxiety !== 0 && this.dassScore.anxiety >= this.dassScore.depress && this.dassScore.anxiety >=  this.dassScore.stress){
+        return "Anxiety";
+    } else if(this.dassScore.stress !== 0 && this.dassScore.stress >= this.dassScore.depress && this.dassScore.stress >=  this.dassScore.anxiety){
+      return "Stress";
+    } else "Nothing";
+    return;
+  }
+
+  receiveChildren(event:any){
+    if(event['action'] === 'getQuestionByPageNumber'){
+        this.pageNumber = event.value;
+        this.getDass42Questions();
+    }
+  }
+
+  calculateStartingSerialNumber(): number {
+    return this.pageNumber * this.questionsPerPage + 1;
   }
 
 }

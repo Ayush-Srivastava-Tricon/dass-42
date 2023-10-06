@@ -3,3 +3,28 @@
     width: auto;
     height: 550px;
 }
+.bg-color{
+    background: #3e3b9e;
+}
+.center-text {
+    font-size: 36px; 
+    text-align: center;
+    color: #fff; 
+    padding: 20px;
+    border-radius: 10px; 
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.4);
+    background-color: #6f42c1; 
+}
+
+.no-css-complete-title{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh;
+  margin: 0;
+}
+@media (min-width: 768px) {
+    .center-text {
+        font-size: 36px;
+    }
+  }

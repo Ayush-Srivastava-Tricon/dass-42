@@ -1,1 +1,36 @@
-<p>activity works!</p>
+<ng-container *ngIf="tasks.length > 0 && !loader">
+  <div class="container">
+    <h1>Activity Task List</h1>
+    <div class="task-list">
+      <div class="task" *ngFor="let task of tasks" >
+        <div class="task-header">
+          <div class="checkbox-wrapper">
+                <input  type="checkbox" (change)="markTaskCompleted($event)">
+                <svg viewBox="0 0 35.6 35.6">
+                  <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
+                  <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
+                  <polyline class="check" points="11.78 18.12 15.55 22.23 25.17 12.87"></polyline>
+                </svg>
+              </div>
+              <!-- <input type="checkbox"  id="task-{{task.id}}"> -->
+          <label for="task-{{task.id}}"></label>
+          <span>{{ task.taskName }}</span>
+        </div>
+        <div class="task-details">
+          <p>{{ task.description }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="text-center my-2 p-3" >
+      <button class="no-css-submit-btn"> Submit</button>
+  </div>
+</ng-container>
+
+<ng-container *ngIf="tasks.length == 0 && !loader">
+    <div class="no-css-complete-title">
+      <div class="center-text">
+        Please Complete the Questionaire First !
+      </div>
+    </div>
+</ng-container>

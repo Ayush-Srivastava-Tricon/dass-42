@@ -11,12 +11,16 @@ export class ApplicationService extends BaseService {
     super(http);
   }
 
-  fetchDass42Question(callback:any){
-    this.getData({},this.httpUrl['fetch-question'],callback);
+  fetchDass42Question(pageNumber:any,callback:any){
+    this.getData({},`${this.httpUrl['fetch-question']}/${pageNumber}`,callback);
    }
    
   fetchDassScore(callback:any){
     this.getData({},this.httpUrl['fetch-dass-score'],callback);
+   }
+   
+  fetchQuotes(callback:any){
+    this.getData({},this.httpUrl['fetch-quotes'],callback);
    }
 
   checkUserAttemptTest(callback:any){

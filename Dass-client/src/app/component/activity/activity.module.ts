@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 
 import { ActivityRoutingModule } from './activity-routing.module';
 import { ActivityComponent } from './activity.component';
+import { FormsModule } from '@angular/forms';
 
 
 @NgModule({
@@ -10,6 +11,7 @@ import { ActivityComponent } from './activity.component';
   imports: [
     CommonModule,
     ActivityRoutingModule,
+    FormsModule
   ],
   exports:[ActivityComponent]
 })

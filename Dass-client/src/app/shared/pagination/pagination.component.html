@@ -1,0 +1,16 @@
+<nav> 
+    <ul class="pagination justify-content-center">
+        <li #link class="page-item" (click)="prevBtn()">
+            <span aria-hidden="true">&laquo;</span>
+            <span class="sr-only">Previous</span>
+        </li>
+
+        <ng-container *ngFor="let item of [].constructor(3);let idx=index;">
+      <li #link  class="page-link" [ngClass]="{'active':currentValue-1 == idx,'disabled':currentValue-1 == idx}" value="page"  (click)="activeLink($event)">{{idx+1}}</li>
+        </ng-container>
+        <li  #link class="page-item" (click)="nxtBtn()">
+            <span aria-hidden="true">&raquo;</span>
+            <span class="sr-only">Next</span>
+        </li>
+    </ul>
+</nav>

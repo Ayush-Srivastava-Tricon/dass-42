@@ -1,9 +1,22 @@
-<div class="container">
-    <div class="row my-5 justify-content-center align-items-center">
+<ng-container *ngIf="quote && !loader">
+    <div class="container">
+        <div class="row my-5 justify-content-center align-items-center">
         <div class="col-sm-12">
             <div class="bg-img">
-
+                <div class="row justify-content-end pt-5 px-5 flex-wrap">
+                    <div class="col-sm-6 pt-5 bg-color">
+                        <h4 class="text-wrap text-right mx-3 text-light">{{quote}}</h4>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
+</ng-container>
+<ng-container *ngIf="!quote && !loader">
+    <div class="no-css-complete-title">
+        <div class="center-text">
+          Please Complete the Questionaire First !
+        </div>
+      </div>
+</ng-container>
