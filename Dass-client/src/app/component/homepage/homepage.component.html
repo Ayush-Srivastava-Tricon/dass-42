@@ -35,7 +35,7 @@
   </div>
 </ng-container>
 
-<app-pagination *ngIf="!this.sufferingState && !loader" (emitToParent)="receiveChildren($event)"></app-pagination>
+<app-pagination *ngIf="!this.sufferingState" (emitToParent)="receiveChildren($event)"></app-pagination>
 
 <ng-container *ngIf="questionList.length == 0 && !loader">
   <div class="container">
