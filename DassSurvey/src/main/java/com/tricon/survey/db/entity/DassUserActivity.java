@@ -1,6 +1,7 @@
 package com.tricon.survey.db.entity;
 
 import java.io.Serializable;
+import java.util.Date;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -9,17 +10,18 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Data;
+
 
 @Data
 @Entity
-@Table(name = "dass_score")
-public class DassScore implements Serializable{
-
-	private static final long serialVersionUID = -2370122000620564790L;
-
+@Table(name = "dass_user_activity")
+public class DassUserActivity implements Serializable{
 	
+	private static final long serialVersionUID = -5641652531418675399L;
+
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id", nullable = false)
@@ -29,12 +31,11 @@ public class DassScore implements Serializable{
 	@JoinColumn(name = "dass_uuid", referencedColumnName = "uuid",updatable = false)
 	private DassUser user;
 	
-	@Column(name = "depression_score", nullable = false)
-	private Integer depressionScore;
+	@CreationTimestamp
+	@Column(name = "created_date")
+	private Date createdDate;
 	
-	@Column(name = "anxity_score", nullable = false)
-	private Integer anxityScore;
-	
-	@Column(name = "stress_score", nullable = false)
-	private Integer stressScore;
+	@UpdateTimestamp
+	@Column(name = "updated_date")
+	private Date updatedDate;
 }

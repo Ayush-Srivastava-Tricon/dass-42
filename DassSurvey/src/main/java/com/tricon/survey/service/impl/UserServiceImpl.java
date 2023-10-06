@@ -29,8 +29,10 @@ import com.tricon.survey.db.entity.DassResponse;
 import com.tricon.survey.db.entity.DassScore;
 import com.tricon.survey.db.entity.DassTask;
 import com.tricon.survey.db.entity.DassUser;
+import com.tricon.survey.db.entity.DassUserActivity;
 import com.tricon.survey.db.entity.DassUserRole;
 import com.tricon.survey.db.entity.DassUserRolePk;
+import com.tricon.survey.dto.ActivityResponseDto;
 import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
@@ -41,6 +43,7 @@ import com.tricon.survey.dto.UserDassResponseDto;
 import com.tricon.survey.dto.UserRegistrationDto;
 import com.tricon.survey.enums.DassCategory;
 import com.tricon.survey.enums.DassRoleEnum;
+import com.tricon.survey.jpa.repository.ActivityRepo;
 import com.tricon.survey.jpa.repository.DassQuestionRepo;
 import com.tricon.survey.jpa.repository.DassQuoteRepo;
 import com.tricon.survey.jpa.repository.DassResponseRepo;
@@ -81,6 +84,9 @@ public class UserServiceImpl {
 	
 	@Value("${data.totalRecordperPage}")
 	private int totalRecordsperPage;
+	
+	@Autowired
+	ActivityRepo activityRepo;
 	
 	@Transactional(rollbackOn = Exception.class)
 	public GenericResponse registerUser(UserRegistrationDto dto) throws Exception {
@@ -156,11 +162,14 @@ public class UserServiceImpl {
 			dassResponseRepo.removeRetakeUserData(dassUser.getUuid());
 		}
 		
-		//if user is retake test then remove previous dass score by default
+		//if user is retake test then remove previous dass score and activities by default
 		
 		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
 			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
 			dassScoreRepo.delete(existingScore);
+			
+			DassUserActivity existingActivity = activityRepo.findByUserUuid(dassUser.getUuid());
+			activityRepo.delete(existingActivity);
 		}
 
 		dto.getData().forEach(x -> {
@@ -520,5 +529,60 @@ public class UserServiceImpl {
 		}
 
 		return null;
+	}
+
+	@Transactional(rollbackOn = Exception.class)
+	public ActivityResponseDto saveActivity(JwtUser jwtUser) throws Exception {
+		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
+		DassUserActivity activity = null;
+		ActivityResponseDto dto = null;
+		if (user != null && !user.isFirstTimeUser()) {
+			dto = new ActivityResponseDto();
+			DassUserActivity checkExistingUser = activityRepo.findByUserUuid(user.getUuid());
+			if (checkExistingUser == null) {
+				activity = new DassUserActivity();
+				activity.setCreatedDate(Timestamp.from(Instant.now()));
+				activity.setUpdatedDate(Timestamp.from(Instant.now()));
+				activity.setUser(user);
+				activity = activityRepo.save(activity);
+				dto.setCreatedDate(activity.getCreatedDate());
+				dto.setUpdatedDate(activity.getUpdatedDate());
+				dto.setUserUuid(activity.getUser().getUuid());
+				dto.setSuccessStatus(true);
+			} else {
+				DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
+				if (activityHistory != null) {
+					activityHistory.setUpdatedDate(Timestamp.from(Instant.now()));
+					activity = activityRepo.save(activityHistory);
+					dto.setCreatedDate(activity.getCreatedDate());
+					dto.setUpdatedDate(activity.getUpdatedDate());
+					dto.setUserUuid(activity.getUser().getUuid());
+					dto.setSuccessStatus(true);
+				}else {
+					dto.setMessage("This activity has been submiited already for today.");
+					dto.setSuccessStatus(false);;
+				}
+			}
+		}
+		return dto;
+	}
+
+	public ActivityResponseDto fetchUserActivites(JwtUser jwtUser) throws Exception {
+		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
+		ActivityResponseDto dto = null;
+		if (user != null && !user.isFirstTimeUser()) {
+			dto = new ActivityResponseDto();
+			DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
+			if (activityHistory != null) {
+				dto.setCreatedDate(activityHistory.getCreatedDate());
+				dto.setUpdatedDate(activityHistory.getUpdatedDate());
+				dto.setUserUuid(activityHistory.getUser().getUuid());
+				dto.setSuccessStatus(true);
+			} else {
+				dto.setMessage("This activity has been submiited already for today.");
+				dto.setSuccessStatus(false);
+			}
+		}
+		return dto;
 	}
 }
