@@ -1,5 +1,6 @@
 package com.tricon.survey.db.entity;
 
+import java.io.Serializable;
 import java.util.Date;
 
 import javax.persistence.Column;
@@ -9,8 +10,6 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
-import javax.persistence.Temporal;
-import javax.persistence.TemporalType;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.GenericGenerator;
@@ -21,8 +20,11 @@ import lombok.Data;
 @Data
 @Entity
 @Table(name = "dass_response")
-public class DassResponse {
+public class DassResponse implements Serializable{
 	
+
+	private static final long serialVersionUID = 8484619220038668163L;
+
 	@GeneratedValue(generator = "uuid2")
 	@Id
 	@GenericGenerator(name = "uuid2", strategy = "uuid2")
