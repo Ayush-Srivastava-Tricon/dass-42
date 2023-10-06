@@ -192,9 +192,9 @@ public class UserController {
 		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
 	}
 	
-	@GetMapping(value = "/save-activity/{uuid}")
+	@GetMapping(value = "/save-activity")
 	@PreAuthorize("hasRole('NORMAL')")
-	public ResponseEntity<?> saveActivites(@PathVariable("uuid") String userUuid) {
+	public ResponseEntity<?> saveActivites() {
 		ActivityResponseDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = authentication.getPrincipal();
@@ -214,9 +214,9 @@ public class UserController {
 		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
 	}
 	
-	@GetMapping(value = "/fetch-user-activity/{uuid}")
+	@GetMapping(value = "/fetch-user-activity")
 	@PreAuthorize("hasRole('NORMAL')")
-	public ResponseEntity<?> fetchUserActivites(@PathVariable("uuid") String userUuid) {
+	public ResponseEntity<?> fetchUserActivites() {
 		ActivityResponseDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = authentication.getPrincipal();

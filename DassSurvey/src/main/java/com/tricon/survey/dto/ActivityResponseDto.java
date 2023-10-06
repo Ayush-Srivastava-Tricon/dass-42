@@ -10,4 +10,6 @@ public class ActivityResponseDto {
 	private String userUuid;
 	private Date createdDate;
 	private Date updatedDate;
+	private String message;
+	private boolean successStatus;
 }

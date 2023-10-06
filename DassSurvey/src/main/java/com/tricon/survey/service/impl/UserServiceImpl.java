@@ -162,11 +162,14 @@ public class UserServiceImpl {
 			dassResponseRepo.removeRetakeUserData(dassUser.getUuid());
 		}
 		
-		//if user is retake test then remove previous dass score by default
+		//if user is retake test then remove previous dass score and activities by default
 		
 		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
 			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
 			dassScoreRepo.delete(existingScore);
+			
+			DassUserActivity existingActivity = activityRepo.findByUserUuid(dassUser.getUuid());
+			activityRepo.delete(existingActivity);
 		}
 
 		dto.getData().forEach(x -> {
@@ -535,20 +538,30 @@ public class UserServiceImpl {
 		ActivityResponseDto dto = null;
 		if (user != null && !user.isFirstTimeUser()) {
 			dto = new ActivityResponseDto();
-			DassUserActivity activityHistory = activityRepo.findByUserUuid(user.getUuid());
-			if (activityHistory == null) {
+			DassUserActivity checkExistingUser = activityRepo.findByUserUuid(user.getUuid());
+			if (checkExistingUser == null) {
 				activity = new DassUserActivity();
 				activity.setCreatedDate(Timestamp.from(Instant.now()));
 				activity.setUpdatedDate(Timestamp.from(Instant.now()));
 				activity.setUser(user);
 				activity = activityRepo.save(activity);
 				dto.setCreatedDate(activity.getCreatedDate());
-				dto.setUserUuid(activity.getUser().getUuid());
-			} else {
-				activityHistory.setUpdatedDate(Timestamp.from(Instant.now()));
-				activity = activityRepo.save(activityHistory);
 				dto.setUpdatedDate(activity.getUpdatedDate());
 				dto.setUserUuid(activity.getUser().getUuid());
+				dto.setSuccessStatus(true);
+			} else {
+				DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
+				if (activityHistory != null) {
+					activityHistory.setUpdatedDate(Timestamp.from(Instant.now()));
+					activity = activityRepo.save(activityHistory);
+					dto.setCreatedDate(activity.getCreatedDate());
+					dto.setUpdatedDate(activity.getUpdatedDate());
+					dto.setUserUuid(activity.getUser().getUuid());
+					dto.setSuccessStatus(true);
+				}else {
+					dto.setMessage("This activity has been submiited already for today.");
+					dto.setSuccessStatus(false);;
+				}
 			}
 		}
 		return dto;
@@ -559,10 +572,15 @@ public class UserServiceImpl {
 		ActivityResponseDto dto = null;
 		if (user != null && !user.isFirstTimeUser()) {
 			dto = new ActivityResponseDto();
-			DassUserActivity activityHistory = activityRepo.findByUserUuid(user.getUuid());
+			DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
 			if (activityHistory != null) {
+				dto.setCreatedDate(activityHistory.getCreatedDate());
 				dto.setUpdatedDate(activityHistory.getUpdatedDate());
 				dto.setUserUuid(activityHistory.getUser().getUuid());
+				dto.setSuccessStatus(true);
+			} else {
+				dto.setMessage("This activity has been submiited already for today.");
+				dto.setSuccessStatus(false);
 			}
 		}
 		return dto;
