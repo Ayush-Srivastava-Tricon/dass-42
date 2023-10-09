@@ -583,7 +583,7 @@ public class UserServiceImpl {
 					dto.setSuccessStatus(true);
 				} else {
 					dto.setSuccessStatus(false);
-					dto.setMessage("Activites have been saved already for today");
+					dto.setMessage("Activites have been saved already.");
 				}
 			}
 		}
@@ -616,7 +616,7 @@ public class UserServiceImpl {
 					dto.setUpdatedDate(checkExistingUser.getUpdatedDate());
 					dto.setUserUuid(checkExistingUser.getUser().getUuid());
 					dto.setSuccessStatus(false);
-					dto.setMessage("Activites have been saved already for today");
+					dto.setMessage("Activites have been saved already.");
 				}
 			}
 		}
