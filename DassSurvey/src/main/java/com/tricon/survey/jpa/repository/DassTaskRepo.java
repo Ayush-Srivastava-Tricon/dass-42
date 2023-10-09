@@ -10,4 +10,5 @@ import com.tricon.survey.enums.DassCategory;
 public interface DassTaskRepo extends JpaRepository<DassTask, Integer>{
 
 	List<DassTask>findByCategory(DassCategory cat);
+	List<DassTask>findByIdIn(List<Integer>id);
 }

@@ -8,7 +8,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -25,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import com.tricon.survey.db.entity.DassQuestion;
 import com.tricon.survey.dto.ActivityResponseDto;
+import com.tricon.survey.dto.DassActivityDto;
 import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
@@ -192,16 +192,22 @@ public class UserController {
 		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
 	}
 	
-	@GetMapping(value = "/save-activity")
+	@PostMapping(value = "/save-activity")
 	@PreAuthorize("hasRole('NORMAL')")
-	public ResponseEntity<?> saveActivites() {
+	public ResponseEntity<?> saveActivites(@RequestBody DassActivityDto dto) {
 		ActivityResponseDto response = null;
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Object principal = authentication.getPrincipal();
 		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
 		JwtUser jwtUser = (JwtUser) userDetails;
+		if (dto.getActivity1() == null || dto.getActivity2() == null || dto.getActivity3() == null || dto.getActivity4()==null
+				|| dto.getActivity5()==null) {
+			return ResponseEntity
+					.ok(new GenericResponse(HttpStatus.BAD_REQUEST, MessageConstants.EMPTY_RESOURCE, null));
+		}
+			
 		try {
-			response = userService.saveActivity(jwtUser);
+			response = userService.saveActivity(jwtUser,dto);
 			if(response==null) {
 				return ResponseEntity
 						.ok(new GenericResponse(HttpStatus.BAD_REQUEST, "Something went Wrong", null));

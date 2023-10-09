@@ -38,4 +38,20 @@ public class DassUserActivity implements Serializable{
 	@UpdateTimestamp
 	@Column(name = "updated_date")
 	private Date updatedDate;
+	
+	@Column(name = "activity_1", nullable = false)
+    private int activity1Id;
+	
+	@Column(name = "activity_2", nullable = false)
+	private int activity2Id;
+	
+	@Column(name = "activity_3", nullable = false)
+	private int activity3Id;
+	
+	@Column(name = "activity_4", nullable = false)
+	private int activity4Id;
+	
+	@Column(name = "activity_5", nullable = false)
+	private int activity5Id;
+	
 }

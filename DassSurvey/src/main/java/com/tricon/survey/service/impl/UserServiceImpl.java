@@ -3,6 +3,7 @@ package com.tricon.survey.service.impl;
 import java.sql.Timestamp;
 import java.time.Instant;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
@@ -33,6 +34,7 @@ import com.tricon.survey.db.entity.DassUserActivity;
 import com.tricon.survey.db.entity.DassUserRole;
 import com.tricon.survey.db.entity.DassUserRolePk;
 import com.tricon.survey.dto.ActivityResponseDto;
+import com.tricon.survey.dto.DassActivityDto;
 import com.tricon.survey.dto.DassInterpritingDto;
 import com.tricon.survey.dto.DassRetakeTestDto;
 import com.tricon.survey.dto.GenericResponse;
@@ -166,9 +168,11 @@ public class UserServiceImpl {
 		
 		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
 			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
+			if(existingScore!=null)
 			dassScoreRepo.delete(existingScore);
 			
 			DassUserActivity existingActivity = activityRepo.findByUserUuid(dassUser.getUuid());
+			if(existingActivity!=null)
 			activityRepo.delete(existingActivity);
 		}
 
@@ -340,12 +344,14 @@ public class UserServiceImpl {
 				depressionTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
 				anxityTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -371,12 +377,14 @@ public class UserServiceImpl {
 				depressionTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
 				stressTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -401,12 +409,14 @@ public class UserServiceImpl {
 				anxityTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
 				stressTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -423,6 +433,7 @@ public class UserServiceImpl {
 				depressionTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -435,6 +446,7 @@ public class UserServiceImpl {
 				anxityTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -447,6 +459,7 @@ public class UserServiceImpl {
 				stressTask.forEach(x -> {
 					TaskDto taskDto = new TaskDto();
 					taskDto.setTaskName(x.getTask());
+					taskDto.setTaskId(x.getId());
 					listOfTask.add(taskDto);
 
 				});
@@ -532,7 +545,7 @@ public class UserServiceImpl {
 	}
 
 	@Transactional(rollbackOn = Exception.class)
-	public ActivityResponseDto saveActivity(JwtUser jwtUser) throws Exception {
+	public ActivityResponseDto saveActivity(JwtUser jwtUser, DassActivityDto dt) throws Exception {
 		DassUser user = userRepo.findByEmail(jwtUser.getUsername());
 		DassUserActivity activity = null;
 		ActivityResponseDto dto = null;
@@ -544,6 +557,11 @@ public class UserServiceImpl {
 				activity.setCreatedDate(Timestamp.from(Instant.now()));
 				activity.setUpdatedDate(Timestamp.from(Instant.now()));
 				activity.setUser(user);
+				activity.setActivity1Id(dt.getActivity1());
+				activity.setActivity2Id(dt.getActivity2());
+				activity.setActivity3Id(dt.getActivity3());
+				activity.setActivity4Id(dt.getActivity4());
+				activity.setActivity5Id(dt.getActivity5());
 				activity = activityRepo.save(activity);
 				dto.setCreatedDate(activity.getCreatedDate());
 				dto.setUpdatedDate(activity.getUpdatedDate());
@@ -553,14 +571,19 @@ public class UserServiceImpl {
 				DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
 				if (activityHistory != null) {
 					activityHistory.setUpdatedDate(Timestamp.from(Instant.now()));
+					activityHistory.setActivity1Id(dt.getActivity1());
+					activityHistory.setActivity2Id(dt.getActivity2());
+					activityHistory.setActivity3Id(dt.getActivity3());
+					activityHistory.setActivity4Id(dt.getActivity4());
+					activityHistory.setActivity5Id(dt.getActivity5());
 					activity = activityRepo.save(activityHistory);
 					dto.setCreatedDate(activity.getCreatedDate());
 					dto.setUpdatedDate(activity.getUpdatedDate());
 					dto.setUserUuid(activity.getUser().getUuid());
 					dto.setSuccessStatus(true);
-				}else {
-					dto.setMessage("This activity has been submiited already for today.");
-					dto.setSuccessStatus(false);;
+				} else {
+					dto.setSuccessStatus(false);
+					dto.setMessage("Activites have been saved already for today");
 				}
 			}
 		}
@@ -579,8 +602,22 @@ public class UserServiceImpl {
 				dto.setUserUuid(activityHistory.getUser().getUuid());
 				dto.setSuccessStatus(true);
 			} else {
-				dto.setMessage("This activity has been submiited already for today.");
-				dto.setSuccessStatus(false);
+				DassUserActivity checkExistingUser = activityRepo.findByUserUuid(user.getUuid());
+				List<DassTask> existingTask = taskRepo.findByIdIn(Arrays.asList(checkExistingUser.getActivity1Id(),
+						checkExistingUser.getActivity2Id(), checkExistingUser.getActivity3Id(),
+						checkExistingUser.getActivity4Id(), checkExistingUser.getActivity5Id()));
+				if (existingTask != null && !existingTask.isEmpty()) {
+					dto.setActivity1(existingTask.get(0).getTask());
+					dto.setActivity2(existingTask.get(1).getTask());
+					dto.setActivity3(existingTask.get(2).getTask());
+					dto.setActivity4(existingTask.get(3).getTask());
+					dto.setActivity5(existingTask.get(4).getTask());
+					dto.setCreatedDate(checkExistingUser.getCreatedDate());
+					dto.setUpdatedDate(checkExistingUser.getUpdatedDate());
+					dto.setUserUuid(checkExistingUser.getUser().getUuid());
+					dto.setSuccessStatus(false);
+					dto.setMessage("Activites have been saved already for today");
+				}
 			}
 		}
 		return dto;

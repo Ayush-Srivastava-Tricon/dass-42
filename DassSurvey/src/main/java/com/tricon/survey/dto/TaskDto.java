@@ -6,4 +6,5 @@ import lombok.Data;
 public class TaskDto {
 
 	private String taskName;
+	private int taskId;
 }
