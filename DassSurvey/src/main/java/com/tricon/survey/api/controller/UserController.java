@@ -166,6 +166,9 @@ public class UserController {
 		JwtUser jwtUser = (JwtUser) userDetails;
 		try {
 			response = userService.fetchTasks(jwtUser);
+			if(response==null) {
+				return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "You are not allowed to visit this page", response));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
@@ -184,6 +187,9 @@ public class UserController {
 		JwtUser jwtUser = (JwtUser) userDetails;
 		try {
 			response = userService.fetchQuotes(jwtUser);
+			if(response==null) {
+				return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "You are not allowed to visit this page", response));
+			}
 		} catch (Exception e) {
 			e.printStackTrace();
 			logger.error(e.getMessage());
