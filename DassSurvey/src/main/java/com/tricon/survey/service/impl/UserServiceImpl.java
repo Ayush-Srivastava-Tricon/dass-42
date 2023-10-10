@@ -275,9 +275,16 @@ public class UserServiceImpl {
 				dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
 				dto.setIsUserReset(false);
 			} else {
+				if(user.isUserReset()){
+					dto.setIsFirstTimeUser(user.isFirstTimeUser());
+					dto.setIsUserReset(true);
+					dto.setSubmittedDate(null);
+				}
+				else {
 				dto.setIsFirstTimeUser(user.isFirstTimeUser());
-				dto.setIsUserReset(true);
+				dto.setIsUserReset(false);
 				dto.setSubmittedDate(null);
+              }
 			}
 		}
 		return dto;
