@@ -19,4 +19,5 @@ public class ActivityResponseDto {
 	private String activity4;
 	private String activity5;
 	private String message;
+	private Boolean isActivitySubmitted;
 }

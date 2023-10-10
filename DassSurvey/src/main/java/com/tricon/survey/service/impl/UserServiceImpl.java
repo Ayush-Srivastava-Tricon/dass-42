@@ -566,6 +566,7 @@ public class UserServiceImpl {
 				dto.setCreatedDate(activity.getCreatedDate());
 				dto.setUpdatedDate(activity.getUpdatedDate());
 				dto.setUserUuid(activity.getUser().getUuid());
+				dto.setIsActivitySubmitted(true);
 				dto.setSuccessStatus(true);
 			} else {
 				DassUserActivity activityHistory = activityRepo.findExistingActivityByUserUuid(user.getUuid());
@@ -581,8 +582,10 @@ public class UserServiceImpl {
 					dto.setUpdatedDate(activity.getUpdatedDate());
 					dto.setUserUuid(activity.getUser().getUuid());
 					dto.setSuccessStatus(true);
+					dto.setIsActivitySubmitted(true);
 				} else {
 					dto.setSuccessStatus(false);
+					dto.setIsActivitySubmitted(false);
 					dto.setMessage("Activites have been saved already.");
 				}
 			}
@@ -601,10 +604,12 @@ public class UserServiceImpl {
 				dto.setUpdatedDate(activityHistory.getUpdatedDate());
 				dto.setUserUuid(activityHistory.getUser().getUuid());
 				dto.setSuccessStatus(true);
+				dto.setIsActivitySubmitted(true);
 			} else {
 				DassUserActivity checkExistingUser = activityRepo.findByUserUuid(user.getUuid());
 				if (checkExistingUser == null) {
 					dto.setSuccessStatus(false);
+					dto.setIsActivitySubmitted(false);
 					dto.setMessage("No records found");
 					return dto;
 				}
@@ -621,6 +626,7 @@ public class UserServiceImpl {
 					dto.setUpdatedDate(checkExistingUser.getUpdatedDate());
 					dto.setUserUuid(checkExistingUser.getUser().getUuid());
 					dto.setSuccessStatus(false);
+					dto.setIsActivitySubmitted(true);
 					dto.setMessage("Activites have been saved already.");
 				}
 			}
