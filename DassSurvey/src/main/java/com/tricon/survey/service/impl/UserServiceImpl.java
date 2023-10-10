@@ -603,6 +603,11 @@ public class UserServiceImpl {
 				dto.setSuccessStatus(true);
 			} else {
 				DassUserActivity checkExistingUser = activityRepo.findByUserUuid(user.getUuid());
+				if (checkExistingUser == null) {
+					dto.setSuccessStatus(false);
+					dto.setMessage("No records found");
+					return dto;
+				}
 				List<DassTask> existingTask = taskRepo.findByIdIn(Arrays.asList(checkExistingUser.getActivity1Id(),
 						checkExistingUser.getActivity2Id(), checkExistingUser.getActivity3Id(),
 						checkExistingUser.getActivity4Id(), checkExistingUser.getActivity5Id()));
