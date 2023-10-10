@@ -158,6 +158,10 @@ public class UserServiceImpl {
 
 		// if user is retake then we edit exist user response
 
+		
+		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
+			dassUser.setUserReset(false);
+		}
 		int existingDassScoreUser = dassResponseRepo.countDassResponseByUserUuid(dassUser.getUuid());
 
 		if (existingDassScoreUser > 0) {
@@ -269,8 +273,10 @@ public class UserServiceImpl {
 			if (retakeTestDto != null) {
 				dto.setIsFirstTimeUser(user.isFirstTimeUser());
 				dto.setSubmittedDate(retakeTestDto.getSubmittedDate());
+				dto.setIsUserReset(false);
 			} else {
 				dto.setIsFirstTimeUser(user.isFirstTimeUser());
+				dto.setIsUserReset(true);
 				dto.setSubmittedDate(null);
 			}
 		}
@@ -651,6 +657,9 @@ public class UserServiceImpl {
 
 		if (dassUser != null && !dassUser.isFirstTimeUser() && isRetake) {
 
+			
+			dassUser.setUserReset(true);
+			
 			int existingDassScoreUser = dassResponseRepo.countDassResponseByUserUuid(dassUser.getUuid());
 
 			if (existingDassScoreUser > 0) {
