@@ -50,7 +50,7 @@
             </div>
             <div class="row align-items-center">
               <div class="col-sm-12 text-center p-3 thankyou-title">
-                <h4>You're Suffering from {{sufferingState}} ! <img src="../../../assets/images/sad.svg" width="30" height="30" alt=""> </h4>
+                <h4>You're Suffering from {{sufferingState}} ! <img *ngIf="this.sufferingState != 'Nothing'" src="../../../assets/images/sad.svg" width="30" height="30" alt=""> </h4>
               </div>
             </div>
             <div class="row flex-column">

@@ -115,7 +115,6 @@
   }
 
   .no-css-submit-btn {
-    appearance: button;
     background-color: #6f42c1;
     border: solid transparent;
     border-radius: 16px;
@@ -141,22 +140,31 @@
     -webkit-user-select: none;
     vertical-align: middle;
     white-space: nowrap;
+
+    &.disabled{
+          pointer-events: none;
+          background-color: lightgray;
+    }
    }
    
-  .no-css-submit-btn:after {
-    background-clip: padding-box;
-    background-color:#6f42c1;
-    border: solid transparent;
-    border-radius: 16px;
-    border-width: 0 0 4px;
-    bottom: -4px;
-    content: "";
-    left: 0;
-    position: absolute;
-    right: 0;
-    top: 0;
-    z-index: -1;
-   }
+//   .no-css-submit-btn:after {
+//     background-clip: padding-box;
+//     background-color:#6f42c1;
+//     border: solid transparent;
+//     border-radius: 16px;
+//     border-width: 0 0 4px;
+//     bottom: -4px;
+//     content: "";
+//     left: 0;
+//     position: absolute;
+//     right: 0;
+//     top: 0;
+//     z-index: -1;
+//     &.disabled{
+//       pointer-events: none;
+//       background-color: lightgray;
+// }
+  //  }
    
    .no-css-submit-btn:main, .no-css-submit-btn:focus {
     user-select: auto;

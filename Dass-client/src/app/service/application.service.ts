@@ -31,7 +31,20 @@ export class ApplicationService extends BaseService {
     this.postData(params,this.httpUrl['submit-dass-response'],callback);
    }
 
+   submitActivity(params:any,callback:any){
+    this.postData(params,this.httpUrl['save-activity'],callback);
+   }
+
    fetchActivity(callback:any){
     this.getData({},this.httpUrl['fetch-task'],callback);
+   }
+
+   checkUserAlreadySubmittedActivity(callback:any){
+    this.getData({},this.httpUrl['fetch-user-activity'],callback);
+   }
+
+  //  Below method is to reset user response from Database
+   deleteUserResponse(isRetest:boolean,callback:any){
+    this.getData({},this.httpUrl[`reset-user-response`]+"/"+isRetest,callback);
    }
 }

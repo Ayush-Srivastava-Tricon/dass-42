@@ -18,6 +18,9 @@ export class BaseService {
     'checkUserAttemptTest':'/checkUserAttemptTest',
     'fetch-task':'/fetch-task',
     'fetch-quotes':'/fetch-quotes',
+    'fetch-user-activity':'/fetch-user-activity',
+    'save-activity':'/save-activity',
+    'reset-user-response':'/reset-user-response',
    };
 
   constructor(public http: HttpClient) { }

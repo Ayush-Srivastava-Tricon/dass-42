@@ -1,11 +1,12 @@
 <ng-container *ngIf="tasks.length > 0 && !loader">
   <div class="container">
     <h1>Activity Task List</h1>
+      <h4 *ngIf="isActivitySubmitted">Your Activity Response Has been Submitted</h4>
     <div class="task-list">
-      <div class="task" *ngFor="let task of tasks" >
+      <div class="task" *ngFor="let task of tasks;let idx = index" >
         <div class="task-header">
           <div class="checkbox-wrapper">
-                <input  type="checkbox" (change)="markTaskCompleted($event)">
+                <input  type="checkbox" [checked]="isActivitySubmitted" [value]="task.taskId" (change)="markTaskCompleted($event,idx)">
                 <svg viewBox="0 0 35.6 35.6">
                   <circle class="background" cx="17.8" cy="17.8" r="17.8"></circle>
                   <circle class="stroke" cx="17.8" cy="17.8" r="14.37"></circle>
@@ -23,14 +24,15 @@
     </div>
   </div>
   <div class="text-center my-2 p-3" >
-      <button class="no-css-submit-btn"> Submit</button>
+      <button *ngIf="!isActivitySubmitted" class="no-css-submit-btn" (click)="saveActivity()" [ngClass]="{'disabled':submitActivityBtnDisabled}" [disabled]="submitActivityBtnDisabled"> Submit</button>
+      <span *ngIf="isActivitySubmitted" class="fs-4 bg-dark text-light p-2"> Come Back Tomorrow For New Activity !.</span>
   </div>
 </ng-container>
 
 <ng-container *ngIf="tasks.length == 0 && !loader">
     <div class="no-css-complete-title">
       <div class="center-text">
-        Please Complete the Questionaire First !
+        {{errorMsg}}
       </div>
     </div>
 </ng-container>

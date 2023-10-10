@@ -57,7 +57,7 @@ export class HomepageComponent {
           if(this.isFirstTimeUser){
             this.getDass42Questions();
           } else{
-            this.availableForRetest();
+            this.availableForRetest(res.data?.isUserReset);
           }
       }
       
@@ -66,7 +66,7 @@ export class HomepageComponent {
     
   }
 
-  availableForRetest(){
+  availableForRetest(isUserReset:boolean){
       const todayDate:any = new Date();
       let previousSubmittedDate:any = new Date(this.testSubmittedDate);
       const diffTime = Math.abs(todayDate - previousSubmittedDate);
@@ -75,10 +75,20 @@ export class HomepageComponent {
       if(diffDays >= 14){
         this.isRetestEnable = true;
         this.isRetakenTest = true;
+        !isUserReset ?  this.resetUserResponse() : '';
         this.getDass42Questions();
       } else{
         this.fetchDassScore();
       }
+  }
+
+  resetUserResponse(){
+    this._service.deleteUserResponse(this.isRetakenTest,(res:any)=>{
+      if(res.status){
+        console.log(res);
+        
+      }
+    })
   }
 
   getDass42Questions(){
@@ -158,8 +168,7 @@ export class HomepageComponent {
         return "Anxiety";
     } else if(this.dassScore.stress !== 0 && this.dassScore.stress >= this.dassScore.depress && this.dassScore.stress >=  this.dassScore.anxiety){
       return "Stress";
-    } else "Nothing";
-    return;
+    } else return "Nothing";
   }
 
   receiveChildren(event:any){
