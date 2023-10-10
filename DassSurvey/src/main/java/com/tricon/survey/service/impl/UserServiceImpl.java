@@ -644,6 +644,7 @@ public class UserServiceImpl {
 		return dto;
 	}
 
+	@Transactional(rollbackOn = Exception.class)
 	public Boolean resetUserResponse(JwtUser jwtUser, boolean isRetake) throws Exception {
 
 		DassUser dassUser = userRepo.findByEmail(jwtUser.getUsername());
