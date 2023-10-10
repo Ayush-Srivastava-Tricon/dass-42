@@ -524,7 +524,6 @@ public class UserServiceImpl {
 					listOfQuotes.add(quoteDto);
 
 				});
-				return listOfQuotes;
 			} else if (isAnxity) {
 				List<DassQuotes> anxityQuotes = quoteRepo.findByCategory(DassCategory.ANXIETY);
 				Collections.shuffle(anxityQuotes);
@@ -537,7 +536,6 @@ public class UserServiceImpl {
 					listOfQuotes.add(quoteDto);
 
 				});
-				return listOfQuotes;
 			} else {
 				List<DassQuotes> stressQuotes = quoteRepo.findByCategory(DassCategory.STRESS);
 				Collections.shuffle(stressQuotes);
@@ -550,7 +548,6 @@ public class UserServiceImpl {
 					listOfQuotes.add(quoteDto);
 
 				});
-				return listOfQuotes;
 			}
 		}
 
