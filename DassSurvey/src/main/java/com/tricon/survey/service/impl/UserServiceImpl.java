@@ -308,6 +308,13 @@ public class UserServiceImpl {
 			int depressionScore = existingScore.getDepressionScore();
 			int anxityScore = existingScore.getAnxityScore();
 			int stressScore = existingScore.getStressScore();
+			
+			if(depressionScore==0 && anxityScore==0 && stressScore==0) {
+				
+				return null;
+			}
+			
+			
 
 			// find Maximum Score
 			int maxScore = depressionScore > anxityScore
@@ -480,9 +487,15 @@ public class UserServiceImpl {
 		List<QuotesDto> listOfQuotes = new ArrayList<>();
 
 		if (existingScore != null) {
+
 			int depressionScore = existingScore.getDepressionScore();
 			int anxityScore = existingScore.getAnxityScore();
 			int stressScore = existingScore.getStressScore();
+			
+			if (depressionScore == 0 && anxityScore == 0 && stressScore == 0) {
+
+				return null;
+			}
 
 			// find Maximum Score
 			int maxScore = depressionScore > anxityScore
