@@ -554,7 +554,7 @@ public class UserServiceImpl {
 			}
 		}
 
-		return null;
+		return listOfQuotes;
 	}
 
 	@Transactional(rollbackOn = Exception.class)
