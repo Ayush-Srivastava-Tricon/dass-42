@@ -168,12 +168,12 @@ public class UserServiceImpl {
 		
 		if(!dassUser.isFirstTimeUser() && dto.getRetakeSurvey()) {
 			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
-			if(existingScore!=null)
-			dassScoreRepo.delete(existingScore);
+			if(existingScore!=null) {
+			dassScoreRepo.delete(existingScore);}
 			
 			DassUserActivity existingActivity = activityRepo.findByUserUuid(dassUser.getUuid());
-			if(existingActivity!=null)
-			activityRepo.delete(existingActivity);
+			if(existingActivity!=null) {
+			activityRepo.delete(existingActivity);}
 		}
 
 		dto.getData().forEach(x -> {
@@ -642,5 +642,35 @@ public class UserServiceImpl {
 			}
 		}
 		return dto;
+	}
+
+	public Boolean resetUserResponse(JwtUser jwtUser, boolean isRetake) throws Exception {
+
+		DassUser dassUser = userRepo.findByEmail(jwtUser.getUsername());
+
+		if (dassUser != null && !dassUser.isFirstTimeUser() && isRetake) {
+
+			int existingDassScoreUser = dassResponseRepo.countDassResponseByUserUuid(dassUser.getUuid());
+
+			if (existingDassScoreUser > 0) {
+				dassResponseRepo.removeRetakeUserData(dassUser.getUuid());
+			}
+
+			// if user is retake test then remove previous dass score and activities by
+			// default
+
+			DassScore existingScore = dassScoreRepo.findByUserUuid(dassUser.getUuid());
+			if (existingScore != null) {
+				dassScoreRepo.delete(existingScore);
+			}
+
+			DassUserActivity existingActivity = activityRepo.findByUserUuid(dassUser.getUuid());
+			if (existingActivity != null) {
+				activityRepo.delete(existingActivity);
+			}
+
+			return true;
+		}
+		return null;
 	}
 }

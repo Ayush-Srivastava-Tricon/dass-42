@@ -243,4 +243,25 @@ public class UserController {
 		}
 		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
 	}
+	
+	@GetMapping(value = "/reset-user-response/{isRetake}")
+	@PreAuthorize("hasRole('NORMAL')")
+	public ResponseEntity<?> resetUserResponse(@PathVariable("isRetake") boolean isRetake) {
+		Boolean response = null;
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Object principal = authentication.getPrincipal();
+		final UserDetails userDetails = userDetailsService.loadUserByUsername(((UserDetails) principal).getUsername());
+		JwtUser jwtUser = (JwtUser) userDetails;
+		try {
+			response = userService.resetUserResponse(jwtUser, isRetake);
+			if (response == null) {
+				return ResponseEntity.ok(new GenericResponse(HttpStatus.BAD_REQUEST, "Something went Wrong", null));
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+			logger.error(e.getMessage());
+			return ResponseEntity.badRequest().body(new GenericResponse(HttpStatus.INTERNAL_SERVER_ERROR, "", null));
+		}
+		return ResponseEntity.ok(new GenericResponse(HttpStatus.OK, "", response));
+	}
 }
