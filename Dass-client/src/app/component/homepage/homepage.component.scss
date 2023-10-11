@@ -176,15 +176,42 @@ $breakpoint: 750px;
 }
 
 .thankyou-box{
-  background-color: #28224e;
-  border: 2px solid white;
-  width: auto;
-  height: auto;
-  display: block;
-  padding: 50px;
+    background-color: #ffffff;
+    border: 2px solid #ffffff;
+    width: auto;
+    height: auto;
+    display: block;
+    padding: 50px;
+    border-radius: 20px;
+    box-shadow: 0px 1px 5px #e1e1e1;
+    margin-top: 20px;
 
   .thankyou-title{
-    color: white;
+
     position: relative;
   }
 }
+
+
+summary {    color: #fff;
+    background-color: #198754;
+    border-color: #198754;
+    padding: 10px 15px;
+    width: 290px;
+    margin: 0 auto;
+    border-radius: 30px;}
+.tableSmall { width:60%; margin:0 auto;}
+
+.thankyou-title .btn  {
+pointer-events: none;
+}
+
+@media (max-width: 768px) {
+.thankyou-box{
+    padding: 0px;
+
+
+}
+.tableSmall { width:100%; margin:0 auto;}
+
+  }

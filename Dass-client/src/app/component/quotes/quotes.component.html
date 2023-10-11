@@ -4,9 +4,12 @@
         <div class="col-sm-12">
             <div class="bg-img">
                 <div class="row justify-content-end pt-5 px-5 flex-wrap">
-                    <div class="col-sm-6 pt-5 bg-color">
-                        <h4 class="text-wrap text-right mx-3 text-light">{{quote}}</h4>
-                    </div>
+                    <figure class="quote">
+                        <blockquote>
+                          {{quote}}
+                        </blockquote>
+                        <figcaption>&mdash; {{authorName}} </figcaption>
+                      </figure>
                 </div>
             </div>
         </div>
@@ -15,7 +18,8 @@
 </ng-container>
 <ng-container *ngIf="!quote && !loader">
     <div class="no-css-complete-title">
-        <div class="center-text">
+        <img src="../../../assets/images/question-screen.png" alt="">
+        <div class="completeQestion">
          {{errorMsg}}
         </div>
       </div>

@@ -10,6 +10,7 @@ export class QuotesComponent {
   quote:String='';
   loader:boolean=false;
   errorMsg:string='';
+  authorName:string='';
   constructor(private _service:ApplicationService){}
 
   ngOnInit(){
@@ -22,11 +23,17 @@ export class QuotesComponent {
       if(res.status && res.data){
         this.loader=false;
         this.quote = res.data?.[0]?.quotesName;
+        this.splitAuthorName(this.quote);
         this.errorMsg = res.message ? res.message : 'Please Complete the Questionaire First';
       } else{
         this.loader=false;
         this.errorMsg = res.message ? res.message : 'Please Complete the Questionaire First';
       }
     })
+  }
+
+  splitAuthorName(quote:any){
+      this.quote = quote.split("-")[0];
+      this.authorName = quote.split("-")[1];
   }
 }

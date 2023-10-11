@@ -2,6 +2,7 @@
     background:url('../../../assets/images/motivation.jpg') ;
     width: auto;
     height: 550px;
+border-radius: 20px;
 }
 .bg-color{
     background: #3e3b9e;
@@ -20,11 +21,89 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  height: 100vh;
+  height: 92vh;
   margin: 0;
 }
+
+.quote {
+width: 50%;
+    color: #fff;
+    font-size: 24px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    padding: 20px;
+}
+.quote figcaption,
+.quote blockquote {
+
+    display: flex;
+    align-items: center;
+}
+.completeQestion {
+    font-size: 36px;
+    color: #262626;
+    padding: 50px 50px;
+    border-radius: 10px;
+    background-color: #ebebeb;
+    width: 500px;
+    text-align: left;
+    margin-left: 30px;
+    position: relative;
+    margin-top: -55px;}
+.completeQestion:after{
+    content: "";
+    width: 0;
+    height: 0;
+    border-top: 30px solid transparent;
+    border-bottom: 30px solid transparent;
+    position: absolute;
+    left: -30px;
+    border-right: 30px solid #ebebeb;
+    top: 50%;
+    margin-top: -25px;
+}
+
 @media (min-width: 768px) {
     .center-text {
         font-size: 36px;
     }
   }
+
+@media (max-width: 992px) {
+.quote{
+    width: 100%;
+    background: rgb(16 0 68 / 80%);
+    border-radius: 20px;
+}
+.no-css-complete-title{
+flex-wrap: wrap;
+    height: auto;
+    margin-top: 40px;
+    flex-direction: column-reverse;
+
+img {
+    width: 70%;
+}
+
+}
+.completeQestion {
+    font-size: 32px;
+    padding: 20px 30px;
+    width: auto;
+    text-align: left;
+    margin-left: 10px;
+    position: relative;
+    margin-top: 10px;
+    line-height: normal;
+    margin-right: 10px;
+    margin-bottom: 40px;
+}
+.completeQestion:after{
+    left: 50%;
+    top: inherit;
+    bottom: -40px;
+transform: rotate(-90deg);
+    margin-left: -15px;
+}
+}

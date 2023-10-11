@@ -9,8 +9,8 @@
       <li #link  class="page-link" [ngClass]="{'active':currentValue-1 == idx,'disabled':currentValue-1 == idx}" value="page"  (click)="activeLink($event)">{{idx+1}}</li>
         </ng-container>
         <li  #link class="page-item" (click)="nxtBtn()" *ngIf="currentValue-1 < 2">
-            <span aria-hidden="true">&raquo;</span>
             <span class="sr-only">Next</span>
+<span aria-hidden="true"> &raquo;</span>
         </li>
     </ul>
 </nav>

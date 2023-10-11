@@ -25,3 +25,27 @@
 .disabled{
     pointer-events: none;
 }
+
+
+
+.pagination li:first-child {
+border-radius: 10px 0 0 10px;
+}
+.pagination li:last-child {
+border-radius: 0px 10px 10px 0px;
+}
+
+.page-link {
+    color: #28224e;
+    cursor: pointer;
+}
+.page-item {
+padding-left:15px;
+padding-right:15px;
+color: #28224e;}
+.active {
+    z-index: 3;
+    color: #fff;
+    background-color: #28224e;
+    border-color: #28224e;
+}

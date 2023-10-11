@@ -63,17 +63,28 @@
               </div>
             </div>
             <ng-container *ngIf="showDassTable">
-            <div class="row">
-              <div class="col-sm-12">
-                <div class="text-center p-3 thankyou-title"> Depression : {{dassScore.depress}} , Anxiety:
-                  {{dassScore.anxiety}} , Stress : {{dassScore.stress }} </div>
+              <div class="row">
+                <div class="col-sm-12">
+                  <div class="text-center p-3 thankyou-title"> 
+  <button type="button" class="btn btn-primary">
+    Depression <span class="badge bg-light text-dark">{{dassScore.depress}}</span>
+  </button> &nbsp;
+  
+  <button type="button" class="btn btn-primary">
+    Anxiety <span class="badge bg-light text-dark">{{dassScore.anxiety}}</span>
+  </button>
+  &nbsp;
+  <button type="button" class="btn btn-primary">
+    Stress <span class="badge bg-light text-dark">{{dassScore.stress }}</span>
+  </button>
+  </div>
+                </div>
               </div>
-            </div>
            
             <div class="row justify-content-center align-items-center">
-              <div class="col-sm-6">
-                <table class="table table-bordered">
-                  <thead>
+              <div class="col-sm-12">
+                <table class="table table-bordered tableSmall">
+                  <thead  class="table-light">
                     <tr>
                       <th scope="col">DASS (42) Scoring Guide</th>
                       <th scope="col">Depression</th>

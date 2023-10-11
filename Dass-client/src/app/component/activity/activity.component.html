@@ -1,6 +1,6 @@
 <ng-container *ngIf="tasks.length > 0 && !loader">
   <div class="container">
-    <h1>Activity Task List</h1>
+    <h1 class="py-3">Activity Task List</h1>
       <h4 *ngIf="isActivitySubmitted">Your Activity Response Has been Submitted</h4>
     <div class="task-list">
       <div class="task" *ngFor="let task of tasks;let idx = index" >
@@ -31,7 +31,8 @@
 
 <ng-container *ngIf="tasks.length == 0 && !loader">
     <div class="no-css-complete-title">
-      <div class="center-text">
+      <img src="../../../assets/images/question-screen.png" alt="">
+      <div class="completeQestion">
         {{errorMsg}}
       </div>
     </div>
