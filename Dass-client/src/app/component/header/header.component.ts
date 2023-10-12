@@ -1,4 +1,5 @@
 import { Component } from '@angular/core';
+import { ApplicationService } from 'src/app/service/application.service';
 import Utils from 'src/app/utils/utils';
 
 @Component({
@@ -9,8 +10,16 @@ import Utils from 'src/app/utils/utils';
 export class HeaderComponent {
 
   user:any;
+  isDassScoreZero:boolean=false;
 
-  constructor(){}
+  constructor(private _service:ApplicationService){
+    this._service.subscribeOnValueChange("HeaderComponent",(event:any)=>{
+      if(event['action'] == 'addRetestLinkOnNav'){
+        this.isDassScoreZero = true;
+    }
+    })
+
+  }
 
   ngOnInit(){
       let localData :any = Utils.getUserData();
@@ -23,6 +32,14 @@ export class HeaderComponent {
     location.reload();
     sessionStorage.clear();
     localStorage.clear();
+  }
+
+  takeRetest(){
+    this._service.deleteUserResponse(true,(res:any)=>{
+      if(res.status){
+        location.reload();
+      }
+    })
   }
 
 }

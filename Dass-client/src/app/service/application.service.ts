@@ -1,11 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { BaseService } from './base.service';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ApplicationService extends BaseService {
+
+  private seviceEventEmitter = new Subject<any>();
+  private seviceEventEmitterReference: any = {};
 
   constructor(http:HttpClient) { 
     super(http);
@@ -47,4 +51,14 @@ export class ApplicationService extends BaseService {
    deleteUserResponse(isRetest:boolean,callback:any){
     this.getData({},this.httpUrl[`reset-user-response`]+"/"+isRetest,callback);
    }
+
+   emitOnValueChange(data: any) {
+    this.seviceEventEmitter.next(data);
+  }
+
+  subscribeOnValueChange(name: any, callback: any) {
+    this.seviceEventEmitterReference[name] = this.seviceEventEmitter.subscribe((header) => {
+      callback(header)
+    });
+  }
 }

@@ -26,7 +26,6 @@ export class HomepageComponent {
   questionsPerPage = 14;
 
   checkboxState: any= new Map();
-
   constructor(private _service:ApplicationService){}
 
 
@@ -157,6 +156,7 @@ export class HomepageComponent {
         this.dassScore.depress = res.data.depressionScore;
         this.dassScore.stress = res.data.stressScore;
         this.sufferingState = this.checkUserSuffersFrom();
+        res.data.finalDassScore.finalScore == 0 ? this._service.emitOnValueChange({action:'addRetestLinkOnNav'}) : '';
       }
     })
   }

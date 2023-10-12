@@ -18,6 +18,9 @@
         <li class="nav-item">
           <a class="nav-link" (click)="logout()" aria-disabled="true" style="cursor: pointer;">Logout </a>
         </li>
+        <li class="nav-item" *ngIf="isDassScoreZero">
+          <a class="nav-link" (click)="takeRetest()" aria-disabled="true" style="cursor: pointer;">Take Retest ? </a>
+        </li>
       </ul>
     </div>
     <h5>Hi, {{user?.firstName|titlecase}}!</h5>
