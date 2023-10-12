@@ -33,7 +33,9 @@ export class QuotesComponent {
   }
 
   splitAuthorName(quote:any){
+    if (quote!= null) {
       this.quote = quote.split("-")[0];
       this.authorName = quote.split("-")[1];
+    }
   }
 }
